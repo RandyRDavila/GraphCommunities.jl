@@ -27,7 +27,8 @@ Pkg.instantiate()
 ## Usage
 
 ### Create a Community Graph
-1. You can create a community graph using the planted_partition_graph function:
+
+You can create a community graph using the planted_partition_graph function:
 ```julia
 using GraphCommunities
 using GraphPlot
@@ -39,7 +40,8 @@ gplot(g)
 ```
 
 ### Run Louvain Community Detection
-2. To detect communities in the graph, use the louvain function:
+
+To detect communities in the graph, use the louvain function:
 ```julia
 using GraphCommunities
 
@@ -54,7 +56,8 @@ plot_communities(g, communities)
 ```
 
 ### K-Clique Percolation Approach
-3. To detect communities using the k-clique percolation approach:
+
+To detect communities using the k-clique percolation approach:
 ```julia
 using GraphCommunities
 
@@ -67,7 +70,8 @@ plot_communities(g, communities)
 ```
 
 ### Plot the Community Graph
-4. After detecting the communities, you can visualize them using the plot_community_graph function:
+
+After detecting the communities, you can visualize them using the plot_community_graph function:
 ```julia
 plot_community_graph(g, communities)
 ```
