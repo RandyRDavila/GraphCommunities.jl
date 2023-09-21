@@ -1,6 +1,6 @@
 # GraphCommunities.jl
 
-GraphCommunities.jl is a Julia package that offers utilities for graph-based community detection and visualization. It provides functions to load graphs, detect communities using the Louvain method, and visualize the detected communities.
+`GraphCommunities.jl`` is a Julia package designed for detecting communities within graphs. It employs various community detection algorithms. Currently, the package includes the Louvain method and the k-clique percolation approach for community detection.
 
 ## Installation
 
@@ -41,10 +41,32 @@ gplot(g)
 2. Run Louvain Community Detection
 To detect communities in the graph, use the louvain function:
 ```julia
+using GraphCommunities
+
+# Create a graph using Graphs.jl or load from a CSV
+g = load_csv_graph("path_to_your_graph.csv")
+
+# Find communities using the Louvain algorithm
 communities = louvain(g)
+
+# Plot the communities
+plot_communities(g, communities)
 ```
 
-3. Plot the Community Graph
+3. K-Clique Percolation Approach
+To detect communities using the k-clique percolation approach:
+```julia
+using GraphCommunities
+
+g = load_csv_graph("path_to_your_graph.csv")
+
+# Currently, only triangles (k=3) are supported
+communities = k_clique_communities(g, 3)
+
+plot_communities(g, communities)
+```
+
+4. Plot the Community Graph
 After detecting the communities, you can visualize them using the plot_community_graph function:
 ```julia
 plot_community_graph(g, communities)

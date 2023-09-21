@@ -114,3 +114,91 @@ function louvain(g::AbstractGraph)
 
     return final_mapping
 end
+
+"""
+    find_triangles(graph::AbstractGraph)
+
+Find all the triangles in the given graph.
+
+# Arguments
+- `graph::AbstractGraph`: The input graph to search for triangles.
+
+# Returns
+- A set containing all the triangles in the graph. Each triangle is represented as a set of 3 vertices.
+"""
+function find_triangles(graph::AbstractGraph)
+    triangles = Set{Set{Int}}()
+
+    for v in vertices(graph)
+        neighbors_v = neighbors(graph, v)
+        for w in neighbors_v
+            if w > v
+                common_neighbors = intersect(neighbors_v, neighbors(graph, w))
+                for u in common_neighbors
+                    if u > w
+                        push!(triangles, Set([v, w, u]))
+                    end
+                end
+            end
+        end
+    end
+
+    return triangles
+end
+
+"""
+    k_clique_graph(triangles::Set{Set{Int}})
+
+Construct a graph where each node represents a triangle from the input set,
+and edges are added between nodes if their respective triangles share two vertices.
+
+# Arguments
+- `triangles::Set{Set{Int}}`: A set of triangles, where each triangle is represented as a set of 3 vertices.
+
+# Returns
+- A graph with nodes representing triangles and edges based on shared vertices.
+"""
+function k_clique_graph(triangles::Set{Set{Int}})
+    # Create a new graph for triangles
+    k_graph = SimpleGraph(length(triangles))
+
+    # Convert set of sets to an array of sets for indexing
+    triangles_array = collect(triangles)
+
+    # If two triangles share 2 nodes, add an edge between them in the k-clique graph
+    for i in eachindex(triangles_array)
+        for j = i+1:length(triangles_array)
+            if length(intersect(triangles_array[i], triangles_array[j])) == 2
+                add_edge!(k_graph, i, j)
+            end
+        end
+    end
+
+    return k_graph
+end
+
+"""
+    k_clique_communities(graph::AbstractGraph)
+
+Detect communities in the graph using the k-clique percolation method.
+Currently, only k=3 (triangles) is supported.
+
+# Arguments
+- `graph::AbstractGraph`: The input graph for community detection.
+
+# Returns
+- A list of vertex sets, where each set represents a community detected in the graph.
+"""
+function k_clique_communities(graph::AbstractGraph)
+    triangles = find_triangles(graph)
+    k_graph = k_clique_graph(triangles)
+
+    # Get connected components of k-clique graph
+    communities = connected_components(k_graph)
+
+    # Convert community indices back to original graph vertex ids
+    triangle_list = collect(triangles)
+    communities_vertex = [union([triangle_list[idx] for idx in community]...) for community in communities]
+
+    return communities_vertex
+end
