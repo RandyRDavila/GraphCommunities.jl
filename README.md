@@ -57,14 +57,16 @@ plot_communities(g, communities)
 
 ### K-Clique Percolation Approach
 
-To detect communities using the k-clique percolation approach:
+To detect communities using the k-clique percolation approach on a
+graph loaded from a csv edge list:
 ```julia
 using GraphCommunities
 
+# Use the included load_csv_graph function
 g = load_csv_graph("path_to_your_graph.csv")
 
-# Currently, only triangles (k=3) are supported
-communities = k_clique_communities(g, 3)
+# Currently, the algorithm is for k = 3 only
+communities = k_clique_communities(g)
 
 plot_communities(g, communities)
 ```
