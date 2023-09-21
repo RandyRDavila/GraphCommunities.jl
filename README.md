@@ -28,12 +28,10 @@ julia> Pkg.instantiate()
 
 ### Create a Community Graph
 
-You can create a community graph using the `planted_partition_graph` function which can randomly create a graph with a predetermined number of communities:
+You can create a community graph using the `planted_partition_graph` function which can randomly create a graph with a predetermined number of communities. The following code creates a graph with 3 communities, 10 nodes per community, 0.8 intra-community edge probability, and 0.1 inter-community edge probability:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
-# Create a graph with 3 communities, 10 nodes per community,
-# 0.8 intra-community edge probability, and 0.1 inter-community edge probability.
 julia> g = planted_partition_graph(3, 10, 0.8, 0.1);
 julia> gplot(g)
 ```
@@ -71,7 +69,7 @@ julia> plot_community_graph(g, communities)
 The package also includes the well-known Karate Club graph as an example dataset. To load the Karate Club graph, use:
 
 ```julia
-julia>using GraphCommunities
+julia> using GraphCommunities
 julia> g = karate_club_graph();
 julia> communities = louvain(g);
 julia> plot_community_graph(g, communities)
