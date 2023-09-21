@@ -36,6 +36,14 @@ julia> g = planted_partition_graph(3, 10, 0.8, 0.1);
 julia> gplot(g)
 ```
 
+Also try the `chained_cliques_graph` function:
+```julia
+julia> using GraphCommunities
+julia> using GraphPlot
+julia> g = chained_cliques_graph(3, 4); # A 3-path of 4 cliques
+julia> gplot(g)
+```
+
 ### Run Louvain Community Detection
 
 To detect communities in the graph, use the louvain function:
