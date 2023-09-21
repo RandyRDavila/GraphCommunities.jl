@@ -28,7 +28,7 @@ Pkg.instantiate()
 
 ### Create a Community Graph
 
-You can create a community graph using the planted_partition_graph function:
+You can create a community graph using the `planted_partition_graph`` function which can randomly create a graph with a predetermined number of communities:
 ```julia
 using GraphCommunities
 using GraphPlot
