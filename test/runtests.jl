@@ -6,7 +6,7 @@ using Graphs
 
     @testset "karate_club_graph" begin
         g = karate_club_graph()
-        @test nv(g) == 33
+        @test nv(g) == 34
     end
 
     @testset "community_detection: Louvain()" begin

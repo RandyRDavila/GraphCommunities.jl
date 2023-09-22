@@ -46,7 +46,7 @@ struct KClique <: CommunityDetectionAlgorithm end
 include("graph-io.jl")
 include("community-detection.jl")
 include("visualizations.jl")
-include("utilities.jl")
+include("graph-constructors.jl")
 
 export load_csv_graph
 export planted_partition_graph
