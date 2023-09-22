@@ -10,24 +10,16 @@ If you're new to Graphs.jl, it's recommended to check out their [documentation](
 
 ## Installation
 
-Since this package is not registered, you'll need to clone it from GitHub and then activate it. Here's how:
+To add the `GraphCommunities` package to your Julia environment, you can use the Julia package manager. In the Julia REPL, enter the package manager by pressing `]`, then run:
 
-1. Clone this repository:
-```
-git clone https://github.com/RandyRDavila/GraphCommunities.jl.git
-```
-
-2. Navigate to the cloned directory and start Julia:
-```
-cd GraphCommunities.jl
-julia
+```julia-repl
+(@v1.x) pkg> add https://github.com/RandyRDavila/GraphCommunities.jl.git
 ```
 
-3. In the Julia REPL, activate and instantiate the project to ensure you have all the required dependencies:
+After the package is added, you can use it in your Julia sessions with:
+
 ```julia
-julia> using Pkg
-julia> Pkg.activate(".")
-julia> Pkg.instantiate()
+using GraphCommunities
 ```
 
 ## Usage
@@ -42,7 +34,7 @@ julia> g = planted_partition_graph(3, 10, 0.8, 0.1);
 julia> gplot(g)
 ```
 
-Also try the `chained_cliques_graph` function:
+Also try the `chained_cliques_graph(r, k)` function which returns a graph obtained by connecting `r` cliques one `k` nodes in a path like manor:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
