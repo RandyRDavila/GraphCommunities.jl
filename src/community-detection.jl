@@ -200,5 +200,16 @@ function k_clique_communities(graph::AbstractGraph)
     triangle_list = collect(triangles)
     communities_vertex = [union([triangle_list[idx] for idx in community]...) for community in communities]
 
-    return communities_vertex
+    return labels_to_dict(communities_vertex)
+end
+
+
+function labels_to_dict(labels)
+    d = Dict{Int, Int}()
+    for (community_id, community) in enumerate(labels)
+        for vertex in community
+            d[vertex] = community_id
+        end
+    end
+    return d
 end
