@@ -1,7 +1,8 @@
 """
     graph_modularity(g::AbstractGraph, node_to_community::Dict{Int, Int}) -> Float64
 
-Calculate the modularity of a graph given a particular community assignment.
+Calculate the modularity of a graph `g` given a particular community assignment
+given by `node_to_community`.
 
 # Arguments
 - `g::AbstractGraph`: The input graph.
@@ -34,17 +35,35 @@ function graph_modularity(
 end
 
 """
-    louvain(g::AbstractGraph) -> Dict
+    community_detection(g::AbstractGraph, algo::Louvain) -> Dict{Int, Int}
 
-Apply the Louvain method for community detection to the graph `g`.
+Detect communities in a graph `g` using the Louvain algorithm, a method based on modularity optimization.
+
+The algorithm consists of two phases that are repeated iteratively:
+1. Local Phase: Each node is moved to the community that yields the highest modularity gain.
+2. Aggregation Phase: A new graph is constructed where nodes represent communities from the previous phase.
+
+These phases are repeated until the modularity ceases to increase significantly.
 
 # Arguments
-- `g::AbstractGraph`: The input graph.
+- `g::AbstractGraph`: The graph on which to detect communities.
+- `algo::Louvain`: Indicates that the Louvain algorithm should be used for community detection.
 
 # Returns
-- `Dict`: A dictionary mapping each vertex to its detected community.
+- A dictionary mapping node IDs in the original graph to their respective community IDs.
+
+# Example
+```julia
+julia> using GraphCommunities
+julia> g = karate_club_graph()
+julia> community_detection(g, Louvain())
+```
+
+# Notes
+The algorithm may not return the same community structure on different runs due to its
+heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function louvain(g::AbstractGraph)
+function community_detection(g::AbstractGraph, algo::Louvain)
     # Initialization
     node_to_community = Dict(v => v for v in vertices(g))
     community_hist = [deepcopy(node_to_community)]
@@ -119,7 +138,7 @@ function louvain(g::AbstractGraph)
 end
 
 """
-    find_triangles(graph::AbstractGraph)
+    find_triangles(graph::AbstractGraph) -> Set{Set{Int}}
 
 Find all the triangles in the given graph.
 
@@ -181,19 +200,34 @@ function k_clique_graph(triangles::Set{Set{Int}})
 end
 
 """
-    k_clique_communities(graph::AbstractGraph)
+    community_detection(g::AbstractGraph, algo::KClique) -> Dict{Int, Int}
 
-Detect communities in the graph using the k-clique percolation method.
-Currently, only k=3 (triangles) is supported.
+Detect communities in a graph `g` using the K-Clique algorithm.
+
+The function first finds triangles (or 3-cliques) in the graph. It then constructs a k-clique
+graph where nodes represent triangles, and edges indicate overlap. The connected components
+of this k-clique graph give the communities in the original graph.
 
 # Arguments
-- `graph::AbstractGraph`: The input graph for community detection.
+- `g::AbstractGraph`: The graph on which to detect communities.
+- `algo::KClique`: Indicates that the K-Clique algorithm should be used for community detection.
 
 # Returns
-- A list of vertex sets, where each set represents a community detected in the graph.
+- A dictionary mapping node IDs in the original graph to their respective community IDs.
+
+# Example
+```julia
+julia> using GraphCommunities
+julia> g = karate_club_graph()
+julia> community_detection(g, KClique())
+```
+
+# Notes
+Currently, the implementation is restricted to 3-cliques (triangles). Future versions might
+support other clique sizes.
 """
-function k_clique_communities(graph::AbstractGraph)
-    triangles = find_triangles(graph)
+function community_detection(g::AbstractGraph, algo::KClique)
+    triangles = find_triangles(g)
     k_graph = k_clique_graph(triangles)
 
     # Get connected components of k-clique graph
