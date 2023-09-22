@@ -15,6 +15,6 @@ export graph_modularity, louvain
 export plot_community_graph
 export karate_club_graph
 export find_triangles, k_clique_communities
-using chained_cliques_graph
+export chained_cliques_graph
 
 end # module
