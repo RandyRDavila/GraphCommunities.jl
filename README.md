@@ -52,7 +52,8 @@ julia> gplot(g)
 
 ### Run Louvain Community Detection
 
-To detect communities in the graph, use the louvain function:
+To detect communities using the louvain algorithm on a
+graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
 julia> g = load_csv_graph("path_to_your_graph.csv");# Create a graph using Graphs.jl or load from a CSV
