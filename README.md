@@ -4,7 +4,7 @@
 
 ## Built on `Graphs.jl`
 
-`GraphCommunities.jl`` is designed to work seamlessly with the `Graphs.jl`` package. All the graph structures, types, and utilities provided by `Graphs.jl` are the foundation of our package. This ensures compatibility, performance, and a familiar API for those already acquainted with [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl).
+`GraphCommunities.jl` is designed to work seamlessly with the `Graphs.jl` package. All the graph structures, types, and utilities provided by `Graphs.jl` are the foundation of our package. This ensures compatibility, performance, and a familiar API for those already acquainted with [Graphs.jl](https://github.com/JuliaGraphs/Graphs.jl).
 
 If you're new to Graphs.jl, it's recommended to check out their documentation to get a deeper understanding of the graph structures and operations you can leverage.
 
