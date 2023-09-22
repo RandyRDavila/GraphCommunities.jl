@@ -10,7 +10,10 @@ Calculate the modularity of a graph given a particular community assignment.
 # Returns
 - `Float64`: The modularity value.
 """
-function graph_modularity(g::AbstractGraph, node_to_community::Dict{Int, Int})
+function graph_modularity(
+    g::AbstractGraph,
+    node_to_community::Dict{Int, Int}
+)
     m = ne(g)  # Total number of edges
     Q = 0.0   # Modularity
 

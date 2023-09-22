@@ -10,7 +10,7 @@ and destination of each edge.
 # Returns
 - `SimpleGraph`: A graph constructed from the edgelist in the CSV.
 """
-function load_csv_graph(path_to_file::String)::SimpleGraph
+function load_csv_graph(path_to_file::String)
     edgelist = CSV.File(path_to_file)
     return SimpleGraph(Edge.([(row[1], row[2]) for row in edgelist]))
 end
@@ -29,7 +29,12 @@ Generate a graph based on the planted partition model.
 # Returns
 - `SimpleGraph`: A graph generated based on the planted partition model.
 """
-function planted_partition_graph(n_communities, nodes_per_community, pintra, pinter)
+function planted_partition_graph(
+    n_communities::Int,
+    nodes_per_community::Int,
+    pintra::Float64,
+    pinter::Float64
+)
     g = SimpleGraph(n_communities * nodes_per_community)
     for i in 1:n_communities
         # Connect nodes within the same community

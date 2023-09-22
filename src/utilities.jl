@@ -12,6 +12,13 @@ and then chaining them together by attaching one node from each clique to the ne
 - A `SimpleGraph` representing the chained cliques.
 """
 function chained_cliques_graph(r::Int, k::Int)::AbstractGraph
+
+    # Check if r is less than 2
+    r < 2 && throw(ArgumentError("The value of r must be 2 or greater."))
+
+    # Check if k is less than 3
+    k < 3 && throw(ArgumentError("The value of k must be 3 or greater."))
+
     # Number of total vertices
     n = r * k
     g = SimpleGraph(n)
