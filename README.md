@@ -1,6 +1,6 @@
 # GraphCommunities.jl
 
-`GraphCommunities.jl`` is a Julia package designed for detecting communities within graphs. It employs various community detection algorithms. Currently, the package includes the Louvain method and the k-clique percolation approach for community detection.
+`GraphCommunities.jl` is a Julia package designed for detecting communities within graphs. It employs various community detection algorithms. Currently, the package includes the Louvain method and the k-clique percolation approach for community detection.
 
 ## Installation
 
