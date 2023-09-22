@@ -9,6 +9,9 @@ Plot a graph with nodes colored based on their community assignments.
 
 # Returns
 - A plot with nodes colored based on their community.
+
+# Note
+This function will only work if each node in the graph is assigned to a community.
 """
 function plot_community_graph(g::AbstractGraph, communities::Dict)
     # Map each unique community to a color

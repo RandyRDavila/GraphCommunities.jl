@@ -12,7 +12,7 @@ If you're new to Graphs.jl, it's recommended to check out their [documentation](
 
 To add the `GraphCommunities` package to your Julia environment, you can use the Julia package manager. In the Julia REPL, enter the package manager by pressing `]`, then run:
 
-```julia-repl
+```julia
 (@v1.x) pkg> add https://github.com/RandyRDavila/GraphCommunities.jl.git
 ```
 
@@ -48,7 +48,7 @@ To detect communities using the louvain algorithm on a
 graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
-julia> g = load_csv_graph("path_to_your_graph.csv");# Create a graph using Graphs.jl or load from a CSV
+julia> g = load_csv_graph("path_to_your_graph.csv");
 julia> communities = community_detection(g, Louvain()); # Find communities using the Louvain algorithm
 julia> plot_communities(g, communities) # Plot the communities
 ```
@@ -59,8 +59,8 @@ To detect communities using the k-clique percolation approach on a
 graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
-julia> g = load_csv_graph("path_to_your_graph.csv"); # Use the included load_csv_graph function
-julia> community_detection(g, KClique()); # Currently, the algorithm is for k = 3 only
+julia> g = load_csv_graph("path_to_your_graph.csv");
+julia> community_detection(g, KClique()) # Find communities using the KClique algorithm
 ```
 
 ### Plot the Community Graph
