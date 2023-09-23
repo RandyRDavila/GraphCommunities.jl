@@ -88,7 +88,7 @@ Finally, the package also provides a function for drawing an interactive visuali
 ```julia
 julia> using GraphCommunities
 julia> g = karate_club_graph();
-julia> draw_graph(g)
+julia> interactive_graph(g)
 ```
 
 ## Author
