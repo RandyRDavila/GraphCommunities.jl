@@ -1,9 +1,7 @@
 module GraphCommunities
 
-using Graphs
-using GraphPlot
-using CSV
-using Colors
+using CSV, Colors, Graphs, GraphPlot
+using Random, WebIOBlink, JSON
 
 """
     CommunityDetectionAlgorithm
@@ -58,5 +56,7 @@ export karate_club_graph
 export chained_cliques_graph
 export Louvain
 export KClique
+export interactive_graph
+export generate_js_code
 
 end # module

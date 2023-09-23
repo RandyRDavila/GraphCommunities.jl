@@ -70,7 +70,7 @@ After detecting the communities, you can visualize them using the plot_community
 julia> plot_community_graph(g, communities)
 ```
 
-## Example Graph
+## Karate Club Graph
 
 The package also includes the well-known Karate Club graph as an example dataset. To load the Karate Club graph, use:
 
@@ -79,6 +79,16 @@ julia> using GraphCommunities
 julia> g = karate_club_graph();
 julia> communities = community_detection(g, Louvain());
 julia> plot_community_graph(g, communities)
+```
+
+## Interactive Visualization
+
+Finally, the package also provides a function for drawing an interactive visualization of your graph:
+
+```julia
+julia> using GraphCommunities
+julia> g = karate_club_graph();
+julia> draw_graph(g)
 ```
 
 ## Author
