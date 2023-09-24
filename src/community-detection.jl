@@ -250,3 +250,78 @@ function labels_to_dict(labels)
     end
     return d
 end
+
+function label_propagation_sweep!(g::AbstractGraph, labels::Dict{Int, Int})
+
+    # Consider the vertices in a random order.
+    X = shuffle(vertices(g))
+
+    # For each node in this ordering apply the label update rule.
+    for v in X
+        neighbors_v = neighbors(g, v)
+        if length(neighbors_v) > 0
+            label_counts = Dict()
+            for w in neighbors_v
+                label = labels[w]
+                if haskey(label_counts, label)
+                    label_counts[label] += 1
+                else
+                    label_counts[label] = 1
+                end
+            end
+            max_label = findmax(label_counts)[2]
+            labels[v] = max_label
+        end
+    end
+end
+
+"""
+    community_detection(g::AbstractGraph, algo::LabelPropagation) -> Dict{Int, Int}
+
+Detect communities in a graph `g` using the Label Propagation algorithm.
+
+The algorithm works by assigning each node a unique label. Then, in each iteration,
+each node adopts the label that is most frequent among its neighbors. The algorithm
+terminates when no node changes its label.
+
+# Arguments
+- `g::AbstractGraph`: The graph on which to detect communities.
+- `algo::LabelPropagation`: Indicates that the Label Propagation algorithm should be used for community detection.
+
+# Returns
+- A dictionary mapping node IDs in the original graph to their respective community IDs.
+
+# Example
+```julia
+julia> using GraphCommunities
+julia> g = karate_club_graph()
+julia> community_detection(g, LabelPropagation())
+```
+
+# Notes
+The algorithm may not return the same community structure on different runs due to its
+heuristic nature. However, the structures should be reasonably similar and of comparable quality.
+"""
+function community_detection(g::AbstractGraph, algo::LabelPropagation)
+    # Initialize each node with a unique label
+    labels = Dict(v => v for v in vertices(g))
+
+    # Run label propagation until convergence
+    prev_labels = deepcopy(labels)
+
+    # Max iteration limit to prevent infinite loops
+    max_iter = 10_000
+
+    # Iteration variable.
+    iter = 0
+
+    # Run label propagation until convergence or max_iter is reached
+    label_propagation_sweep!(g, labels)
+    while labels != prev_labels && iter < max_iter
+        prev_labels = deepcopy(labels)
+        label_propagation_sweep!(g, labels)
+        iter += 1
+    end
+
+    return labels
+end

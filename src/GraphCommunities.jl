@@ -4,6 +4,7 @@ using Graphs
 using GraphPlot
 using CSV
 using Colors
+using Random
 
 """
     CommunityDetectionAlgorithm
@@ -40,6 +41,20 @@ julia> community_detection(graph, KClique())
 ```
 """
 struct KClique <: CommunityDetectionAlgorithm end
+
+"""
+    LabelPropagation <: CommunityDetectionAlgorithm
+
+Type representing the Label Propagation algorithm for community detection. Use this when you want
+to perform community detection using the Label Propagation method.
+
+# Usage
+
+```julia
+julia> community_detection(graph, LabelPropagation())
+```
+"""
+struct LabelPropagation <: CommunityDetectionAlgorithm end
 #... other algorithms in the future
 
 
@@ -58,5 +73,6 @@ export karate_club_graph
 export chained_cliques_graph
 export Louvain
 export KClique
+export LabelPropagation
 
 end # module
