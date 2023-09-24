@@ -1,6 +1,7 @@
 name = "GraphCommunities"
 uuid = "d03e5894-6980-4f0b-ab2f-053f3b9f6508"
 version = "0.1.0"
+license = "MIT"
 
 [deps]
 CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
