@@ -62,7 +62,7 @@ graph loaded from a csv edge list:
 julia> using GraphCommunities
 julia> g = load_csv_graph("path_to_your_graph.csv");
 julia> communities = community_detection(g, Louvain()); # Find communities using the Louvain algorithm
-julia> plot_communities(g, communities) # Plot the communities
+julia> draw_communities(g, communities) # Draw the communities
 ```
 
 Detect communities using the **K-clique Percolation Algorithm** on a
@@ -71,7 +71,7 @@ graph loaded from a csv edge list:
 julia> using GraphCommunities
 julia> g = load_csv_graph("path_to_your_graph.csv");
 julia> community_detection(g, KClique());
-julia> plot_communities(g, communities)
+julia> draw_communities(g, communities) # Draw the communities
 ```
 
 Detect communities using the **Label Propagation Algorithm** on the famous Karate Club Graph using **asynchronous** label updates::
@@ -79,6 +79,7 @@ Detect communities using the **Label Propagation Algorithm** on the famous Karat
 julia> using GraphCommunities
 julia> g = ;
 julia> community_detection(g, LabelPropagation())
+julia> draw_communities(g, communities) # Draw the communities
 ```
 
 Detect communities using the **Label Propagation Algorithm** on the famous Karate Club Graph using **synchronous** label updates:
@@ -86,13 +87,14 @@ Detect communities using the **Label Propagation Algorithm** on the famous Karat
 julia> using GraphCommunities
 julia> g = generate(KarateClub());
 julia> community_detection(g, LabelPropagation(sync=true))
+julia> draw_communities(g, communities) # Draw the communities
 ```
 
 ### Drawing Communities
 
 After detecting the communities, you can visualize them using the `plot_community_graph` function:
 ```julia
-julia> plot_community_graph(g, communities)
+julia> draw_communities(g, communities) # Draw the communities
 ```
 
 ## Author

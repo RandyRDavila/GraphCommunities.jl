@@ -143,7 +143,7 @@ export load_csv_graph
 export graph_modularity
 export find_triangles
 export community_detection
-export plot_community_graph
+export draw_communities
 export generate
 export Louvain
 export KClique

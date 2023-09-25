@@ -1,5 +1,5 @@
 """
-    plot_community_graph(g::AbstractGraph, communities::Dict)
+    draw_communities(g::AbstractGraph, communities::Dict)
 
 Plot a graph with nodes colored based on their community assignments.
 
@@ -13,7 +13,7 @@ Plot a graph with nodes colored based on their community assignments.
 # Note
 This function will only work if each node in the graph is assigned to a community.
 """
-function plot_community_graph(g::AbstractGraph, communities::Dict)
+function draw_communities(g::AbstractGraph, communities::Dict)
     # Map each unique community to a color.
     unique_communities = unique(values(communities))
     colors = distinguishable_colors(length(unique_communities))
