@@ -54,9 +54,14 @@ to perform community detection using the Label Propagation method.
 julia> community_detection(graph, LabelPropagation())
 ```
 """
-struct LabelPropagation <: CommunityDetectionAlgorithm end
-#... other algorithms in the future
+struct LabelPropagation <: CommunityDetectionAlgorithm
+    synchronous::Bool
+end
 
+# Default constructor sets asynchronous as the default method.
+LabelPropagation() = LabelPropagation(false)
+
+#... other algorithms in the future
 
 include("graph-io.jl")
 include("community-detection.jl")

@@ -251,10 +251,15 @@ function labels_to_dict(labels)
     return d
 end
 
-function label_propagation_sweep!(g::AbstractGraph, labels::Dict{Int, Int})
-
+function label_propagation_sweep!(
+    g::AbstractGraph,
+    labels::Dict{Int, Int},
+    algo::LabelPropagation
+)
     # Consider the vertices in a random order.
     X = shuffle(vertices(g))
+
+    new_labels = Dict{Int, Int}()
 
     # For each node in this ordering apply the label update rule.
     for v in X
@@ -264,21 +269,33 @@ function label_propagation_sweep!(g::AbstractGraph, labels::Dict{Int, Int})
             label_counts = Dict()
             for w in neighbors_v
                 label = labels[w]
-                # The function `haskey` checks if label is a kay in label_counts.
                 if haskey(label_counts, label)
                     label_counts[label] += 1
                 else
                     label_counts[label] = 1
                 end
             end
+
             # Find the label that is most frequent among the neighbors of v.
-            # If there are multiple such labels, choose the one with the smallest
-            # label value. This is done by using the `findmax` function.
             max_label = findmax(label_counts)[2]
-            labels[v] = max_label
+
+            # If synchronous, store new labels separately.
+            if algo.synchronous
+                new_labels[v] = max_label
+            else
+                labels[v] = max_label
+            end
+        end
+    end
+
+    # If synchronous, apply all updates simultaneously.
+    if algo.synchronous
+        for v in keys(new_labels)
+            labels[v] = new_labels[v]
         end
     end
 end
+
 
 """
     community_detection(g::AbstractGraph, algo::LabelPropagation) -> Dict{Int, Int}
@@ -321,10 +338,10 @@ function community_detection(g::AbstractGraph, algo::LabelPropagation)
     iter = 0
 
     # Run label propagation until convergence or max_iter is reached.
-    label_propagation_sweep!(g, labels)
+    label_propagation_sweep!(g, labels, algo)
     while labels != prev_labels && iter < max_iter
         prev_labels = deepcopy(labels)
-        label_propagation_sweep!(g, labels)
+        label_propagation_sweep!(g, labels, algo)
         iter += 1
     end
 

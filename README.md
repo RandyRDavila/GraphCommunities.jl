@@ -48,7 +48,7 @@ julia> gplot(g)
 
 ### The Louvain Algorithm for Community Detection
 
-To detect communities using the louvain algorithm on a
+Detect communities using the louvain algorithm on a
 graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
@@ -59,7 +59,7 @@ julia> plot_communities(g, communities) # Plot the communities
 
 ### The K-Clique Percolation Algorithm for Community Detection
 
-To detect communities using the k-clique percolation approach on a
+Detect communities using the k-clique percolation approach on a
 graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
@@ -69,7 +69,14 @@ julia> community_detection(g, KClique()) # Find communities using the KClique al
 
 ###  The Label Propagation Algorithm for Community Detection
 
-To detect communities using the label propagation algorithm on the famous Karate Club Graph:
+Detect communities using the label propagation algorithm on the famous Karate Club Graph using **asynchronous** label updates::
+```julia
+julia> using GraphCommunities
+julia> g = karate_club_graph();
+julia> community_detection(g, LabelPropagation())
+```
+
+Detect communities using the label propagation algorithm on the famous Karate Club Graph using **synchronous** label updates:
 ```julia
 julia> using GraphCommunities
 julia> g = karate_club_graph();
