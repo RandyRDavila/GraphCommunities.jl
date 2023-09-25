@@ -15,8 +15,8 @@ function graph_modularity(
     g::AbstractGraph,
     node_to_community::Dict{Int, Int}
 )
-    m = ne(g)  # Total number of edges
-    Q = 0.0   # Modularity
+    m = ne(g)  # Total number of edges in the graph.
+    Q = 0.0   # Modularity to be built up incrementally.
 
     for i in vertices(g)
         ki = degree(g, i)
@@ -24,7 +24,7 @@ function graph_modularity(
             kj = degree(g, j)
             Aij = has_edge(g, i, j) ? 1 : 0
 
-            # Check if nodes i and j are in the same community
+            # Check if nodes i and j are in the same community.
             δ = node_to_community[i] == node_to_community[j] ? 1.0 : 0.0
 
             Q += (Aij - (ki * kj) / (2 * m)) * δ
@@ -64,7 +64,7 @@ The algorithm may not return the same community structure on different runs due 
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
 function community_detection(g::AbstractGraph, algo::Louvain)
-    # Initialization
+    # Initialization.
     node_to_community = Dict(v => v for v in vertices(g))
     community_hist = [deepcopy(node_to_community)]
 
@@ -75,16 +75,16 @@ function community_detection(g::AbstractGraph, algo::Louvain)
     while current_modularity - prev_modularity > 1e-3
         prev_modularity = current_modularity
 
-        # Local Phase
+        # The Local Phase.
         for v in vertices(g)
             best_community = node_to_community[v]
             max_delta_q = 0.0
 
-            # Cache the current community and its modularity for node v
+            # Cache the current community and its modularity for node v.
             orig_modularity = graph_modularity(g, node_to_community)
 
             for u in neighbors(g, v)
-                # Move v to the community of u
+                # Move v to the community of u.
                 node_to_community[v] = node_to_community[u]
                 new_mod = graph_modularity(g, node_to_community)
                 delta_q = new_mod - orig_modularity
@@ -95,20 +95,20 @@ function community_detection(g::AbstractGraph, algo::Louvain)
                 end
             end
 
-            # Return v to the best community found
+            # Return v to the best community found.
             node_to_community[v] = best_community
         end
 
-        # Update current_modularity after the Local Phase
+        # Update current_modularity after the Local Phase.
         current_modularity = graph_modularity(g, node_to_community)
 
-        # Prepare for aggregation
+        # Prepare for aggregation.
         communities = unique(values(node_to_community))
         node_to_new_community = Dict(
                 v => findfirst(==(node_to_community[v]), communities) for v in vertices(g)
             )
 
-        # Aggregation Phase
+        # The Aggregation Phase.
         g_new = SimpleGraph(length(communities))
         for e in edges(g)
             src, dst = e.src, e.dst
@@ -118,13 +118,13 @@ function community_detection(g::AbstractGraph, algo::Louvain)
             end
         end
 
-        # Prepare for next iteration
+        # Prepare for next iteration.
         g = g_new
         node_to_community = Dict(v => v for v in vertices(g))
         push!(community_hist, node_to_new_community)
     end
 
-    # Map original nodes to final communities
+    # Map original nodes to final communities.
     final_mapping = Dict()
     for v in vertices(original_graph)
         community = v
@@ -230,10 +230,10 @@ function community_detection(g::AbstractGraph, algo::KClique)
     triangles = find_triangles(g)
     k_graph = k_clique_graph(triangles)
 
-    # Get connected components of k-clique graph
+    # Get connected components of k-clique graph. Each component is a community.
     communities = connected_components(k_graph)
 
-    # Convert community indices back to original graph vertex ids
+    # Convert community indices back to original graph vertex ids.
     triangle_list = collect(triangles)
     communities_vertex = [union([triangle_list[idx] for idx in community]...) for community in communities]
 
@@ -259,16 +259,21 @@ function label_propagation_sweep!(g::AbstractGraph, labels::Dict{Int, Int})
     # For each node in this ordering apply the label update rule.
     for v in X
         neighbors_v = neighbors(g, v)
+        # Only update the label if the node has neighbors.
         if length(neighbors_v) > 0
             label_counts = Dict()
             for w in neighbors_v
                 label = labels[w]
+                # The function `haskey` checks if label is a kay in label_counts.
                 if haskey(label_counts, label)
                     label_counts[label] += 1
                 else
                     label_counts[label] = 1
                 end
             end
+            # Find the label that is most frequent among the neighbors of v.
+            # If there are multiple such labels, choose the one with the smallest
+            # label value. This is done by using the `findmax` function.
             max_label = findmax(label_counts)[2]
             labels[v] = max_label
         end
@@ -303,19 +308,19 @@ The algorithm may not return the same community structure on different runs due 
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
 function community_detection(g::AbstractGraph, algo::LabelPropagation)
-    # Initialize each node with a unique label
+    # Initialize each node with a unique label.
     labels = Dict(v => v for v in vertices(g))
 
-    # Run label propagation until convergence
+    # Run label propagation until convergence.
     prev_labels = deepcopy(labels)
 
-    # Max iteration limit to prevent infinite loops
+    # Max iteration limit to prevent infinite loops.
     max_iter = 10_000
 
     # Iteration variable.
     iter = 0
 
-    # Run label propagation until convergence or max_iter is reached
+    # Run label propagation until convergence or max_iter is reached.
     label_propagation_sweep!(g, labels)
     while labels != prev_labels && iter < max_iter
         prev_labels = deepcopy(labels)

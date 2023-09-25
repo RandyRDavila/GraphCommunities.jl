@@ -14,7 +14,7 @@ Plot a graph with nodes colored based on their community assignments.
 This function will only work if each node in the graph is assigned to a community.
 """
 function plot_community_graph(g::AbstractGraph, communities::Dict)
-    # Map each unique community to a color
+    # Map each unique community to a color.
     unique_communities = unique(values(communities))
     colors = distinguishable_colors(length(unique_communities))
 
@@ -23,6 +23,6 @@ function plot_community_graph(g::AbstractGraph, communities::Dict)
         )
     node_colors = [community_to_color[communities[v]] for v in vertices(g)]
 
-    # Plot
+    # Generate the plot.
     gplot(g, nodefillc=node_colors)
 end
