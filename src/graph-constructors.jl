@@ -1,32 +1,28 @@
 """
-    chained_cliques_graph(r::Int, k::Int) -> AbstractGraph
+    generate(structure::ChainedCliques) -> SimpleGraph
 
-Generate a graph obtained by starting with `r` cliques each of `k` nodes,
-and then chaining them together by attaching one node from each clique to the next.
+Create a graph consisting of `structure.r` cliques, each of size `structure.k`, chained together.
+- `structure.r` represents the number of cliques.
+- `structure.k` represents the size of each clique.
 
-# Arguments
-- `r`: Number of cliques.
-- `k`: Nodes in each clique.
-
-# Returns
-- A `SimpleGraph` representing the chained cliques.
+Returns a `SimpleGraph` with the chained cliques.
 """
-function chained_cliques_graph(r::Int, k::Int)::AbstractGraph
+function generate(structure::ChainedCliques)::SimpleGraph
 
     # Check if r is less than 2.
-    r < 2 && throw(ArgumentError("The value of r must be 2 or greater."))
+    structure.r < 2 && throw(ArgumentError("The value of r must be 2 or greater."))
 
     # Check if k is less than 3.
-    k < 3 && throw(ArgumentError("The value of k must be 3 or greater."))
+    structure.k < 3 && throw(ArgumentError("The value of k must be 3 or greater."))
 
     # Number of total vertices.
-    n = r * k
+    n = structure.r * structure.k
     g = SimpleGraph(n)
 
     # Add edges within each clique.
-    for i in 1:r
-        start_idx = (i - 1) * k + 1
-        end_idx = start_idx + k - 1
+    for i in 1:structure.r
+        start_idx = (i - 1) * structure.k + 1
+        end_idx = start_idx + structure.k - 1
         for v in start_idx:end_idx
             for u in (v+1):end_idx
                 add_edge!(g, v, u)
@@ -35,52 +31,43 @@ function chained_cliques_graph(r::Int, k::Int)::AbstractGraph
     end
 
     # Add edges between cliques.
-    for i in 1:(r - 1)
-        add_edge!(g, i*k, i*k + 1)
+    for i in 1:(structure.r - 1)
+        add_edge!(g, i*structure.k, i*structure.k + 1)
     end
 
     return g
 end
 
-
 """
-    planted_partition_graph(n_communities, nodes_per_community, pintra, pinter) -> AbstractGraph
+    generate(structure::PlantedPartition) -> SimpleGraph
 
 Generate a graph based on the planted partition model.
+- `structure.n_communities` is the number of communities.
+- `structure.nodes_per_community` denotes the number of nodes per community.
+- `structure.pintra` is the probability of an edge within a community.
+- `structure.pinter` is the probability of an edge between communities.
 
-# Arguments
-- `n_communities`: Number of communities.
-- `nodes_per_community`: Number of nodes per community.
-- `pintra`: Probability of an edge within a community.
-- `pinter`: Probability of an edge between communities.
-
-# Returns
-- `SimpleGraph`: A graph generated based on the planted partition model.
+Returns a `SimpleGraph` constructed based on the planted partition model.
 """
-function planted_partition_graph(
-    n_communities::Int,
-    nodes_per_community::Int,
-    pintra::Float64,
-    pinter::Float64
-)::AbstractGraph
+function generate(structure::PlantedPartition)::SimpleGraph
 
-    g = SimpleGraph(n_communities * nodes_per_community)
-    for i in 1:n_communities
+    g = SimpleGraph(structure.n_communities * structure.nodes_per_community)
+    for i in 1:structure.n_communities
         # Connect nodes within the same community.
-        start, stop = (i-1) * nodes_per_community + 1, i * nodes_per_community
+        start, stop = (i-1) * structure.nodes_per_community + 1, i * structure.nodes_per_community
         for u in start:stop
             for v in (u+1):stop
-                if rand() < pintra
+                if rand() < structure.pintra
                     add_edge!(g, u, v)
                 end
             end
         end
 
         # Connect nodes from this community to other communities.
-        for j in (i+1):n_communities
+        for j in (i+1):structure.n_communities
             for u in start:stop
-                for v in ((j-1)*nodes_per_community + 1):(j*nodes_per_community)
-                    if rand() < pinter
+                for v in ((j-1)*structure.nodes_per_community + 1):(j*structure.nodes_per_community)
+                    if rand() < structure.pinter
                         add_edge!(g, u, v)
                     end
                 end
@@ -91,14 +78,14 @@ function planted_partition_graph(
 end
 
 """
-    karate_club_graph() -> AbstractGraph
+    generate(g::KarateClub) -> AbstractGraph
 
-Create the Zachary's Karate Club graph.
+Construct the famous Zachary's Karate Club graph. This graph represents the friendships
+between the 34 members of a karate club studied by Wayne W. Zachary in 1977.
 
-# Returns
-- A `SimpleGraph` representing the Karate Club network.
+Returns a `SimpleGraph` representing the Karate Club network.
 """
-function karate_club_graph()::AbstractGraph
+function generate(g::KarateClub)::AbstractGraph
     # There are 34 members in the Karate Club.
     g = SimpleGraph(34)
 

@@ -30,11 +30,11 @@ using GraphCommunities
 
 ### Create a Community Graph
 
-You can create a community graph using the `planted_partition_graph` function which can randomly create a graph with a predetermined number of communities. The following code creates a graph with 3 communities, 10 nodes per community, 0.8 intra-community edge probability, and 0.1 inter-community edge probability:
+You can create a community graph using the `planted_partition_graph` function which can randomly create a graph with a predetermined number of communities:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
-julia> g = planted_partition_graph(3, 10, 0.8, 0.1);
+julia> g = generate(PlantedPartition());
 julia> gplot(g)
 ```
 
@@ -42,13 +42,21 @@ Also try the `chained_cliques_graph(r, k)` function which returns a graph obtain
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
-julia> g = chained_cliques_graph(3, 4); # A 3-path of 4 cliques
+julia> g = generate(ChainedCliques());
+julia> gplot(g)
+```
+The package also includes the well-known *Karate Club Graph* as an example dataset to test algorithms on. To load the Karate Club graph, use:
+
+```julia
+julia> using GraphCommunities
+julia> using GraphPlot
+julia> g = generate(KarateClub());
 julia> gplot(g)
 ```
 
-### The Louvain Algorithm for Community Detection
+### Community Detection Algorithms
 
-Detect communities using the louvain algorithm on a
+Detect communities using the **Louvain Algorithm** on a
 graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
@@ -57,46 +65,34 @@ julia> communities = community_detection(g, Louvain()); # Find communities using
 julia> plot_communities(g, communities) # Plot the communities
 ```
 
-### The K-Clique Percolation Algorithm for Community Detection
-
-Detect communities using the k-clique percolation approach on a
+Detect communities using the **K-clique Percolation Algorithm** on a
 graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
 julia> g = load_csv_graph("path_to_your_graph.csv");
-julia> community_detection(g, KClique()) # Find communities using the KClique algorithm
+julia> community_detection(g, KClique());
+julia> plot_communities(g, communities)
 ```
 
-###  The Label Propagation Algorithm for Community Detection
-
-Detect communities using the label propagation algorithm on the famous Karate Club Graph using **asynchronous** label updates::
+Detect communities using the **Label Propagation Algorithm** on the famous Karate Club Graph using **asynchronous** label updates::
 ```julia
 julia> using GraphCommunities
-julia> g = karate_club_graph();
+julia> g = ;
 julia> community_detection(g, LabelPropagation())
 ```
 
-Detect communities using the label propagation algorithm on the famous Karate Club Graph using **synchronous** label updates:
+Detect communities using the **Label Propagation Algorithm** on the famous Karate Club Graph using **synchronous** label updates:
 ```julia
 julia> using GraphCommunities
-julia> g = karate_club_graph();
+julia> g = generate(KarateClub());
 julia> community_detection(g, LabelPropagation(sync=true))
 ```
 
-### Plot the Community Graph
+### Drawing Communities
 
-After detecting the communities, you can visualize them using the plot_community_graph function:
+After detecting the communities, you can visualize them using the `plot_community_graph` function:
 ```julia
 julia> plot_community_graph(g, communities)
-```
-
-## The Karate Club Graph
-
-The package also includes the well-known *Karate Club Graph* as an example dataset to test algorithms on. To load the Karate Club graph, use:
-
-```julia
-julia> using GraphCommunities
-julia> g = karate_club_graph()
 ```
 
 ## Author
