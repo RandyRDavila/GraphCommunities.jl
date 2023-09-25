@@ -30,7 +30,7 @@ using GraphCommunities
 
 ### Create a Community Graph
 
-You can create a community graph using the `planted_partition_graph` function which can randomly create a graph with a predetermined number of communities:
+You can model a graph with community structure with a *planted partition graph* graph:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
@@ -38,15 +38,15 @@ julia> g = generate(PlantedPartition());
 julia> gplot(g)
 ```
 
-Also try the `chained_cliques_graph(r, k)` function which returns a graph obtained by connecting `r` cliques one `k` nodes in a path like manor:
+Another graph with community structure can be obtained by connecting `r` cliques, each with `k` nodes, in a path like manor:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
-julia> g = generate(ChainedCliques());
+julia> g = generate(ChainedCliques(;r=8, k=5));
 julia> gplot(g)
 ```
-The package also includes the well-known *Karate Club Graph* as an example dataset to test algorithms on. To load the Karate Club graph, use:
 
+This package also includes the well-known *Karate Club Graph* as an example dataset to test algorithms on:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
