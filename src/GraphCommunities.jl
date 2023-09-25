@@ -59,7 +59,7 @@ struct LabelPropagation <: CommunityDetectionAlgorithm
 end
 
 # Default constructor sets asynchronous as the default method.
-LabelPropagation() = LabelPropagation(false)
+LabelPropagation(;sync=false) = LabelPropagation(sync)
 
 #... other algorithms in the future
 

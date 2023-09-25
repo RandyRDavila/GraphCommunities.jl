@@ -80,7 +80,7 @@ Detect communities using the label propagation algorithm on the famous Karate Cl
 ```julia
 julia> using GraphCommunities
 julia> g = karate_club_graph();
-julia> community_detection(g, LabelPropagation())
+julia> community_detection(g, LabelPropagation(sync=true))
 ```
 
 ### Plot the Community Graph
