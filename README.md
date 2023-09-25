@@ -30,7 +30,7 @@ using GraphCommunities
 
 ### Create a Community Graph
 
-You can model a graph with community structure with a *planted partition graph* graph:
+A **planted partition graph** (also known as a **stochastic block model**) is a probabilistic graph model often used to generate synthetic networks with community structures for testing algorithms, especially community detection methods:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
