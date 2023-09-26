@@ -77,7 +77,7 @@ julia> draw_communities(g, communities) # Draw the communities
 Detect communities using the **Label Propagation Algorithm** on the famous Karate Club Graph using **asynchronous** label updates::
 ```julia
 julia> using GraphCommunities
-julia> g = ;
+julia> g = generate(KarateClub());
 julia> community_detection(g, LabelPropagation())
 julia> draw_communities(g, communities) # Draw the communities
 ```
