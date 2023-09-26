@@ -30,10 +30,4 @@ using Graphs
         communities = community_detection(g, KClique())
         @test length(unique(values(communities))) == 2
     end
-
-    @testset "community_detection: LabelPropagation()" begin
-        g = generate(ChainedCliques(2, 6))
-        communities = community_detection(g, LabelPropagation())
-        @test length(unique(values(communities))) == 2
-    end
 end

@@ -11,10 +11,7 @@ given by `node_to_community`.
 # Returns
 - `Float64`: The modularity value.
 """
-function graph_modularity(
-    g::AbstractGraph,
-    node_to_community::Dict{Int, Int}
-)
+function graph_modularity(g::AbstractGraph, node_to_community::Dict{Int, Int})::Float64
     m = ne(g)  # Total number of edges in the graph.
     Q = 0.0   # Modularity to be built up incrementally.
 
@@ -63,7 +60,7 @@ julia> community_detection(g, Louvain())
 The algorithm may not return the same community structure on different runs due to its
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function community_detection(g::AbstractGraph, algo::Louvain)
+function community_detection(g::AbstractGraph, algo::Louvain)::Dict{Int, Int}
     # Initialization.
     node_to_community = Dict(v => v for v in vertices(g))
     community_hist = [deepcopy(node_to_community)]
@@ -148,7 +145,7 @@ Find all the triangles in the given graph.
 # Returns
 - A set containing all the triangles in the graph. Each triangle is represented as a set of 3 vertices.
 """
-function find_triangles(graph::AbstractGraph)
+function find_triangles(graph::AbstractGraph)::Set{Set{Int}}
     triangles = Set{Set{Int}}()
 
     for v in vertices(graph)
@@ -169,7 +166,7 @@ function find_triangles(graph::AbstractGraph)
 end
 
 """
-    k_clique_graph(triangles::Set{Set{Int}})
+    k_clique_graph(triangles::Set{Set{Int}}) -> SimpleGraph
 
 Construct a graph where each node represents a triangle from the input set,
 and edges are added between nodes if their respective triangles share two vertices.
@@ -180,7 +177,7 @@ and edges are added between nodes if their respective triangles share two vertic
 # Returns
 - A graph with nodes representing triangles and edges based on shared vertices.
 """
-function k_clique_graph(triangles::Set{Set{Int}})
+function k_clique_graph(triangles::Set{Set{Int}})::SimpleGraph
     # Create a new graph for triangles
     k_graph = SimpleGraph(length(triangles))
 
@@ -226,7 +223,7 @@ julia> community_detection(g, KClique())
 Currently, the implementation is restricted to 3-cliques (triangles). Future versions might
 support other clique sizes.
 """
-function community_detection(g::AbstractGraph, algo::KClique)
+function community_detection(g::AbstractGraph, algo::KClique)::Dict{Int, Int}
     triangles = find_triangles(g)
     k_graph = k_clique_graph(triangles)
 
@@ -240,8 +237,12 @@ function community_detection(g::AbstractGraph, algo::KClique)
     return labels_to_dict(communities_vertex)
 end
 
+"""
+    labels_to_dict(labels::Vector{Set{Int}}) -> Dict{Int, Int}
 
-function labels_to_dict(labels)
+Convert a vector of sets to a dictionary mapping each element to its index in the vector.
+"""
+function labels_to_dict(labels::Vector{Set{Int}})::Dict{Int, Int}
     d = Dict{Int, Int}()
     for (community_id, community) in enumerate(labels)
         for vertex in community
@@ -251,6 +252,19 @@ function labels_to_dict(labels)
     return d
 end
 
+"""
+    label_propagation_sweep!(g::AbstractGraph, labels::Dict{Int, Int}, algo::LabelPropagation)
+
+Perform a single iteration of the Label Propagation algorithm.
+
+# Arguments
+- `g::AbstractGraph`: The graph on which to detect communities.
+- `labels::Dict{Int, Int}`: A dictionary mapping each vertex to its community.
+- `algo::LabelPropagation`: Indicates that the Label Propagation algorithm should be used for community detection.
+
+# Notes
+This function is not intended to be called directly. Instead, use `community_detection`.
+"""
 function label_propagation_sweep!(
     g::AbstractGraph,
     labels::Dict{Int, Int},
@@ -324,7 +338,7 @@ julia> community_detection(g, LabelPropagation())
 The algorithm may not return the same community structure on different runs due to its
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function community_detection(g::AbstractGraph, algo::LabelPropagation)
+function community_detection(g::AbstractGraph, algo::LabelPropagation)::Dict{Int, Int}
     # Initialize each node with a unique label.
     labels = Dict(v => v for v in vertices(g))
 

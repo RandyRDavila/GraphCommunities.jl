@@ -1,5 +1,5 @@
 """
-    generate(structure::ChainedCliques) -> SimpleGraph
+    generate(structure::ChainedCliques)::SimpleGraph
 
 Create a graph consisting of `structure.r` cliques, each of size `structure.k`, chained together.
 - `structure.r` represents the number of cliques.
@@ -9,11 +9,15 @@ Returns a `SimpleGraph` with the chained cliques.
 """
 function generate(structure::ChainedCliques)::SimpleGraph
 
-    # Check if r is less than 2.
+    # Error checks.
     structure.r < 2 && throw(ArgumentError("The value of r must be 2 or greater."))
-
-    # Check if k is less than 3.
     structure.k < 3 && throw(ArgumentError("The value of k must be 3 or greater."))
+
+    # Memory safety checks.
+    isinteger(structure.r) || throw(ArgumentError("The value of r must be an integer."))
+    isinteger(structure.k) || throw(ArgumentError("The value of k must be an integer."))
+    structure.r > 1e6 && throw(ArgumentError("The value of r is too large, which may cause memory issues."))
+    structure.k > 1e6 && throw(ArgumentError("The value of k is too large, which may cause memory issues."))
 
     # Number of total vertices.
     n = structure.r * structure.k
@@ -39,7 +43,7 @@ function generate(structure::ChainedCliques)::SimpleGraph
 end
 
 """
-    generate(structure::PlantedPartition) -> SimpleGraph
+    generate(structure::PlantedPartition)::SimpleGraph
 
 Generate a graph based on the planted partition model.
 - `structure.n_communities` is the number of communities.
@@ -78,14 +82,14 @@ function generate(structure::PlantedPartition)::SimpleGraph
 end
 
 """
-    generate(g::KarateClub) -> AbstractGraph
+    generate(structure::KarateClub)::SimpleGraph
 
 Construct the famous Zachary's Karate Club graph. This graph represents the friendships
 between the 34 members of a karate club studied by Wayne W. Zachary in 1977.
 
 Returns a `SimpleGraph` representing the Karate Club network.
 """
-function generate(g::KarateClub)::AbstractGraph
+function generate(structure::KarateClub)::SimpleGraph
     # There are 34 members in the Karate Club.
     g = SimpleGraph(34)
 

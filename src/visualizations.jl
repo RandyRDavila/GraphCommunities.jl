@@ -1,7 +1,7 @@
 """
     draw_communities(g::AbstractGraph, communities::Dict)
 
-Plot a graph with nodes colored based on their community assignments.
+Draw the graph `g` with nodes colored based on their community assignments.
 
 # Arguments
 - `g::AbstractGraph`: The input graph.
@@ -14,6 +14,13 @@ Plot a graph with nodes colored based on their community assignments.
 This function will only work if each node in the graph is assigned to a community.
 """
 function draw_communities(g::AbstractGraph, communities::Dict)
+    # Ensure every vertex has a community.
+    for v in vertices(g)
+        if !haskey(communities, v)
+            throw(ArgumentError("Node $v doesn't have a community assignment!"))
+        end
+    end
+
     # Map each unique community to a color.
     unique_communities = unique(values(communities))
     colors = distinguishable_colors(length(unique_communities))
