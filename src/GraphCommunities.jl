@@ -10,6 +10,7 @@ using FilePathsBase
 using Graphs
 using GraphPlot
 using Random
+using DataFrames
 
 # ============================
 # ABSTRACT TYPES
@@ -80,7 +81,7 @@ struct KarateClub <: CommunityGraph end
 # MODULE INCLUDES
 # ============================
 
-include("graph-io.jl")
+include("GraphIO.jl")
 include("community-detection.jl")
 include("visualizations.jl")
 include("graph-constructors.jl")
@@ -89,7 +90,6 @@ include("graph-constructors.jl")
 # EXPORTS
 # ============================
 
-export load_csv_graph
 export graph_modularity
 export find_triangles
 export community_detection
