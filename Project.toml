@@ -16,7 +16,6 @@ Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 [compat]
 CSV = "0.10.11"
 Colors = "0.12.10"
-DataFrames = "0.9.20"
 FilePathsBase = "0.9.20"
 GraphPlot = "0.5.2"
 Graphs = "1.8.0"
