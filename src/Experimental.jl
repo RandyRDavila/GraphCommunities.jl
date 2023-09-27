@@ -157,6 +157,20 @@ function graph_kmeans(g::AbstractGraph; max_iters=1000)
     return graph_kmeans(g, k; max_iters=max_iters, centroids=centroids)
 end
 
+"""
+    label_propagation_update(G::AbstractGraph, initial_assignments::Dict{Int,Int}, synchronous::Bool=false)
+
+Apply the label propagation algorithm on a graph `G` to improve community assignments.
+
+# Arguments
+- `G::AbstractGraph`: The input graph.
+- `initial_assignments::Dict{Int,Int}`: The initial community assignments of nodes in the graph.
+- `synchronous::Bool`: If `true`, updates all nodes' labels synchronously in each iteration.
+                       If `false` (default), updates are asynchronous.
+
+# Returns
+- A dictionary mapping each vertex in the graph to its assigned community label.
+"""
 function label_propagation_update(
     G::AbstractGraph,
     initial_assignments::Dict{Int,Int},
@@ -203,6 +217,21 @@ function label_propagation_update(
     return assignments
 end
 
+"""
+    enhanced_graph_kmeans(g::AbstractGraph; max_iters::Int=100, synchronous::Bool=false)
+
+Apply the k-means clustering algorithm on a graph `g` to identify communities,
+and then enhance the assignments using the label propagation algorithm.
+
+# Arguments
+- `g::AbstractGraph`: The input graph.
+- `max_iters::Int`: Maximum number of iterations for the k-means clustering. Defaults to 100.
+- `synchronous::Bool`: If `true`, label propagation updates all nodes' labels synchronously.
+                       If `false` (default), updates are asynchronous.
+
+# Returns
+- A dictionary mapping each vertex in the graph to its assigned community label.
+"""
 function enhanced_graph_kmeans(
     g::AbstractGraph;
     max_iters=100,
@@ -217,6 +246,16 @@ function enhanced_graph_kmeans(
     return label_propagation_update(g, assignments, synchronous)
 end
 
+"""
+    movies_graph()
+
+Create a graph where nodes represent movie actors and directors. Edges are formed between
+actors and directors if they worked together on the same movie.
+
+# Returns
+- `g::AbstractGraph`: The graph representing collaborations between actors and directors.
+- `all_people::Vector`: A list of unique actors and directors in the dataset.
+"""
 function movies_graph()
     # Fetching and loading the data
     url = "https://raw.githubusercontent.com/katie-truong/Jupyter/master/movie_metadata.csv"
