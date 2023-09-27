@@ -2,6 +2,8 @@ module Experimental
 
 using Graphs
 using Random
+using CSV
+using DataFrames
 
 """
     new_find_triangles(G::AbstractGraph)
@@ -215,8 +217,36 @@ function enhanced_graph_kmeans(
     return label_propagation_update(g, assignments, synchronous)
 end
 
+function movies_graph()
+    # Fetching and loading the data
+    url = "https://raw.githubusercontent.com/katie-truong/Jupyter/master/movie_metadata.csv"
+    data = DataFrame(CSV.File(download(url)))
+    # Get a list of unique actors and directors
+    actors = unique(vcat(data[:, :actor_1_name], data[:, :actor_2_name], data[:, :actor_3_name]))
+    directors = unique(data[:, :director_name])
+    all_people = vcat(directors, actors)
+
+    people_to_index = Dict(all_people .=> 1:length(all_people))
+
+    # Create a graph with a vertex for each person (actor/director)
+    g = SimpleGraph(length(all_people))
+
+    for i in 1:nrow(data)
+        director = data[i, :director_name]
+        actors_in_movie = [data[i, :actor_1_name], data[i, :actor_2_name], data[i, :actor_3_name]]
+
+        for actor in actors_in_movie
+            if !isnothing(people_to_index[director]) && !isnothing(people_to_index[actor])
+                add_edge!(g, people_to_index[director], people_to_index[actor])
+            end
+        end
+    end
+    return g, all_people
+end
+
 
 export graph_kmeans
 export enhanced_graph_kmeans
+export movies_graph
 
 end # module
