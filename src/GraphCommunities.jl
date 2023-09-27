@@ -85,6 +85,7 @@ include("GraphIO.jl")
 include("community-detection.jl")
 include("visualizations.jl")
 include("graph-constructors.jl")
+include("Experimental.jl")
 
 # ============================
 # EXPORTS
