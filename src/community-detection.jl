@@ -11,13 +11,21 @@ given by `node_to_community`.
 # Returns
 - `Float64`: The modularity value.
 """
-function graph_modularity(g::AbstractGraph, node_to_community::Dict{Int, Int})::Float64
+function graph_modularity(
+    g::AbstractGraph,
+    node_to_community::Dict{Int, Int}
+)::Float64
+
     m = ne(g)  # Total number of edges in the graph.
     Q = 0.0   # Modularity to be built up incrementally.
 
     # Precompute the degrees and adjacency information
     k = Dict(v => degree(g, v) for v in vertices(g))
-    A = Dict((i, j) => has_edge(g, i, j) ? 1 : 0 for i in vertices(g) for j in neighbors(g, i))
+    A = Dict(
+            (i, j) => has_edge(g, i, j) ? 1 : 0
+            for i in vertices(g)
+            for j in neighbors(g, i)
+        )
 
     for i in vertices(g)
         ki = k[i]
@@ -138,25 +146,25 @@ function community_detection(g::AbstractGraph, algo::Louvain)::Dict{Int, Int}
 end
 
 """
-    find_triangles(graph::AbstractGraph) -> Set{Set{Int}}
+    find_triangles(g::AbstractGraph) -> Set{Set{Int}}
 
 Find all the triangles in the given graph.
 
 # Arguments
-- `graph::AbstractGraph`: The input graph to search for triangles.
+- `g::AbstractGraph`: The input graph to search for triangles.
 
 # Returns
 - A set containing all the triangles in the graph. Each triangle is represented as a set of 3 vertices.
 """
-function find_triangles(graph::AbstractGraph)::Set{Set{Int}}
+function find_triangles(g::AbstractGraph)::Set{Set{Int}}
     triangles = Set{Set{Int}}()
 
-    for v in vertices(graph)
-        neighbors_v = neighbors(graph, v)
+    for v in vertices(g)
+        neighbors_v = neighbors(g, v)
         for w in neighbors_v
             if w > v
-                common_neighbors = intersect(neighbors_v, neighbors(graph, w))
-                for u in common_neighbors
+                _common_neighbors = common_neighbors(g, v, w)
+                for u in _common_neighbors
                     if u > w
                         push!(triangles, Set([v, w, u]))
                     end

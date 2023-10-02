@@ -45,7 +45,8 @@ struct KClique <: CommunityDetectionAlgorithm end
 struct LabelPropagation <: CommunityDetectionAlgorithm
     synchronous::Bool
 end
-LabelPropagation(;sync = false) = LabelPropagation(sync)  # Default constructor
+# Default constructor
+LabelPropagation(;sync = false) = LabelPropagation(sync)
 
 #... other algorithms in the future
 
@@ -55,10 +56,11 @@ LabelPropagation(;sync = false) = LabelPropagation(sync)  # Default constructor
 
 # ChainedCliques
 struct ChainedCliques <: CommunityGraph
-    r::Int
-    k::Int
+    num_cliques::Int
+    clique_size::Int
 end
-ChainedCliques(;r = 6, k = 3) = ChainedCliques(r, k)  # Default constructor
+# Default constructor
+ChainedCliques(;num_cliques = 6, clique_size = 3) = ChainedCliques(num_cliques, clique_size)
 
 # PlantedPartition
 struct PlantedPartition <: CommunityGraph
@@ -67,12 +69,13 @@ struct PlantedPartition <: CommunityGraph
     pintra::Float64
     pinter::Float64
 end
+# Default constructor
 PlantedPartition(
     ;n_communities = 4,
     nodes_per_community = 20,
     pintra = 0.75,
     pinter = 0.01
-) = PlantedPartition(n_communities, nodes_per_community, pintra, pinter)  # Default constructor
+) = PlantedPartition(n_communities, nodes_per_community, pintra, pinter)
 
 # KarateClub
 struct KarateClub <: CommunityGraph end

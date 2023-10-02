@@ -10,23 +10,35 @@ Returns a `SimpleGraph` with the chained cliques.
 function generate(structure::ChainedCliques)::SimpleGraph
 
     # Error checks.
-    structure.r < 2 && throw(ArgumentError("The value of r must be 2 or greater."))
-    structure.k < 3 && throw(ArgumentError("The value of k must be 3 or greater."))
+    structure.num_cliques < 1 && throw(ArgumentError(
+        "The number of cliques need be at least one."
+    ))
+    structure.clique_size < 3 && throw(ArgumentError(
+        "The size of each clique must be three or greater."
+    ))
+    !isinteger(structure.num_cliques) && throw(ArgumentError(
+        "num_cliques must be an integer."
+    ))
+    !isinteger(structure.clique_size) && throw(ArgumentError(
+        "clique_size must be an integer."
+    ))
 
     # Memory safety checks.
-    isinteger(structure.r) || throw(ArgumentError("The value of r must be an integer."))
-    isinteger(structure.k) || throw(ArgumentError("The value of k must be an integer."))
-    structure.r > 1e6 && throw(ArgumentError("The value of r is too large, which may cause memory issues."))
-    structure.k > 1e6 && throw(ArgumentError("The value of k is too large, which may cause memory issues."))
+    structure.num_cliques > 1e6 && throw(ArgumentError(
+        "The value of num_cliques is too large, which may cause memory issues."
+    ))
+    structure.clique_size > 1e6 && throw(ArgumentError(
+        "The value of clique_size is too large, which may cause memory issues."
+    ))
 
     # Number of total vertices.
-    n = structure.r * structure.k
+    n = structure.num_cliques * structure.clique_size
     g = SimpleGraph(n)
 
     # Add edges within each clique.
-    for i in 1:structure.r
-        start_idx = (i - 1) * structure.k + 1
-        end_idx = start_idx + structure.k - 1
+    for i in 1:structure.num_cliques
+        start_idx = (i - 1) * structure.clique_size + 1
+        end_idx = start_idx + structure.clique_size - 1
         for v in start_idx:end_idx
             for u in (v+1):end_idx
                 add_edge!(g, v, u)
@@ -35,8 +47,8 @@ function generate(structure::ChainedCliques)::SimpleGraph
     end
 
     # Add edges between cliques.
-    for i in 1:(structure.r - 1)
-        add_edge!(g, i*structure.k, i*structure.k + 1)
+    for i in 1:(structure.num_cliques - 1)
+        add_edge!(g, i*structure.clique_size, i*structure.clique_size + 1)
     end
 
     return g

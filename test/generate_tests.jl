@@ -12,7 +12,7 @@
     end
 
     @testset "generate: ChainedCliques()" begin
-        g = generate(ChainedCliques(2, 6))
+        g = generate(ChainedCliques(; num_cliques = 2, clique_size = 6))
         @test nv(g) == 12
     end
 end
