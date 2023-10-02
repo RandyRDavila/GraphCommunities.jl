@@ -42,7 +42,7 @@ Another graph with community structure can be obtained by connecting `r` cliques
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
-julia> g = generate(ChainedCliques(;r=8, k=5));
+julia> g = generate(ChainedCliques(;num_cliques=8, clique_size=5));
 julia> gplot(g)
 ```
 
@@ -103,7 +103,7 @@ You can also save your graphs in various formats by using the `GraphIO` submodul
 ```julia
 julia> using GraphCommunities
 julia> using GraphCommunities.GraphIO: write_edgelist
-julia> g = generate(ChainedCliques(2, 6))
+julia> g = generate(ChainedCliques(;num_cliques=2, clique_size=6))
 julia> write_edgelist(g, "test-edgelist.csv") # write to a .csv file
 julia> write_edgelist(g, "test-edgelist.txt") # write to a text file
 ```
