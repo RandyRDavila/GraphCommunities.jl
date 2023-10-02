@@ -15,21 +15,24 @@ function graph_modularity(g::AbstractGraph, node_to_community::Dict{Int, Int})::
     m = ne(g)  # Total number of edges in the graph.
     Q = 0.0   # Modularity to be built up incrementally.
 
-    for i in vertices(g)
-        ki = degree(g, i)
-        for j in vertices(g)
-            kj = degree(g, j)
-            Aij = has_edge(g, i, j) ? 1 : 0
+    # Precompute the degrees and adjacency information
+    k = Dict(v => degree(g, v) for v in vertices(g))
+    A = Dict((i, j) => has_edge(g, i, j) ? 1 : 0 for i in vertices(g) for j in neighbors(g, i))
 
+    for i in vertices(g)
+        ki = k[i]
+        for j in neighbors(g, i)
+            kj = k[j]
+            Aij = A[(i, j)]
             # Check if nodes i and j are in the same community.
             δ = node_to_community[i] == node_to_community[j] ? 1.0 : 0.0
-
             Q += (Aij - (ki * kj) / (2 * m)) * δ
         end
     end
 
     return Q / (2 * m)
 end
+
 
 """
     community_detection(g::AbstractGraph, algo::Louvain) -> Dict{Int, Int}
