@@ -38,7 +38,7 @@ julia> g = generate(PlantedPartition());
 julia> gplot(g)
 ```
 
-Another graph with community structure can be obtained by connecting `r` cliques, each with `k` nodes, in a path like manor:
+Another graph with community structure can be obtained by connecting `num_cliques` cliques, each with `clique_size` nodes, in a path like manor:
 ```julia
 julia> using GraphCommunities
 julia> using GraphPlot
