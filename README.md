@@ -61,7 +61,7 @@ graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
 julia> g = load_csv_graph("path_to_your_graph.csv");
-julia> communities = community_detection(g, Louvain()); # Find communities using the Louvain algorithm
+julia> communities = compute(Louvain(), g); # Find communities using the Louvain algorithm
 julia> draw_communities(g, communities) # Draw the communities
 ```
 
@@ -70,7 +70,7 @@ graph loaded from a csv edge list:
 ```julia
 julia> using GraphCommunities
 julia> g = load_csv_graph("path_to_your_graph.csv");
-julia> community_detection(g, KClique());
+julia> compute(KClique(), g);
 julia> draw_communities(g, communities) # Draw the communities
 ```
 
@@ -78,7 +78,7 @@ Detect communities using the **Label Propagation Algorithm** on the famous Karat
 ```julia
 julia> using GraphCommunities
 julia> g = generate(KarateClub());
-julia> community_detection(g, LabelPropagation())
+julia> compute(LabelPropagation(), g)
 julia> draw_communities(g, communities) # Draw the communities
 ```
 
@@ -86,7 +86,7 @@ Detect communities using the **Label Propagation Algorithm** on the famous Karat
 ```julia
 julia> using GraphCommunities
 julia> g = generate(KarateClub());
-julia> community_detection(g, LabelPropagation(sync=true))
+julia> compute(LabelPropagation(sync=true), g)
 julia> draw_communities(g, communities) # Draw the communities
 ```
 

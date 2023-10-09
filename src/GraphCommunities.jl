@@ -8,6 +8,7 @@ using Colors
 using CSV
 using FilePathsBase
 using Graphs
+using SimpleWeightedGraphs
 using GraphPlot
 using Random
 using DataFrames
@@ -47,6 +48,15 @@ struct LabelPropagation <: CommunityDetectionAlgorithm
 end
 # Default constructor
 LabelPropagation(;sync = false) = LabelPropagation(sync)
+
+# PageRank
+struct PageRank <: CommunityDetectionAlgorithm
+    d::Float64
+    tol::Float64
+    max_iter::Int
+end
+# Default constructor
+PageRank(;d = 0.85, tol = 1e-6, max_iter = 100) = PageRank(d, tol, max_iter)
 
 #... other algorithms in the future
 
@@ -96,11 +106,12 @@ include("Experimental.jl")
 
 export graph_modularity
 export find_triangles
-export community_detection
+export compute
 export draw_communities
 export generate
 export Louvain
 export KClique
+export PageRank
 export LabelPropagation
 export ChainedCliques
 export PlantedPartition

@@ -1,20 +1,20 @@
 """
-    graph_modularity(g::AbstractGraph, node_to_community::Dict{Int, Int}) -> Float64
+    graph_modularity(g::SimpleGraph, node_to_community::Dict{Int, Int}) -> Number
 
 Calculate the modularity of a graph `g` given a particular community assignment
 given by `node_to_community`.
 
 # Arguments
-- `g::AbstractGraph`: The input graph.
+- `g::SimpleGraph`: The input graph.
 - `node_to_community::Dict{Int, Int}`: A dictionary mapping each vertex to its community.
 
 # Returns
 - `Float64`: The modularity value.
 """
 function graph_modularity(
-    g::AbstractGraph,
+    g::SimpleGraph,
     node_to_community::Dict{Int, Int}
-)::Float64
+)::Number
 
     m = ne(g)  # Total number of edges in the graph.
     Q = 0.0   # Modularity to be built up incrementally.
@@ -43,7 +43,7 @@ end
 
 
 """
-    community_detection(g::AbstractGraph, algo::Louvain) -> Dict{Int, Int}
+    compute(algo::Louvain, g::SimpleGraph) -> Number
 
 Detect communities in a graph `g` using the Louvain algorithm, a method based on modularity optimization.
 
@@ -54,8 +54,8 @@ The algorithm consists of two phases that are repeated iteratively:
 These phases are repeated until the modularity ceases to increase significantly.
 
 # Arguments
-- `g::AbstractGraph`: The graph on which to detect communities.
 - `algo::Louvain`: Indicates that the Louvain algorithm should be used for community detection.
+- `g::SimpleGraph`: The graph on which to detect communities.
 
 # Returns
 - A dictionary mapping node IDs in the original graph to their respective community IDs.
@@ -64,14 +64,14 @@ These phases are repeated until the modularity ceases to increase significantly.
 ```julia
 julia> using GraphCommunities
 julia> g = karate_club_graph()
-julia> community_detection(g, Louvain())
+julia> compute(Louvain(), g)
 ```
 
 # Notes
 The algorithm may not return the same community structure on different runs due to its
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function community_detection(g::AbstractGraph, algo::Louvain)::Dict{Int, Int}
+function compute(algo::Louvain, g::SimpleGraph)::Number
     # Initialization.
     node_to_community = Dict(v => v for v in vertices(g))
     community_hist = [deepcopy(node_to_community)]
@@ -146,17 +146,17 @@ function community_detection(g::AbstractGraph, algo::Louvain)::Dict{Int, Int}
 end
 
 """
-    find_triangles(g::AbstractGraph) -> Set{Set{Int}}
+    find_triangles(g::SimpleGraph) -> Set{Set{Int}}
 
 Find all the triangles in the given graph.
 
 # Arguments
-- `g::AbstractGraph`: The input graph to search for triangles.
+- `g::SimpleGraph`: The input graph to search for triangles.
 
 # Returns
 - A set containing all the triangles in the graph. Each triangle is represented as a set of 3 vertices.
 """
-function find_triangles(g::AbstractGraph)::Set{Set{Int}}
+function find_triangles(g::SimpleGraph)
     triangles = Set{Set{Int}}()
 
     for v in vertices(g)
@@ -208,7 +208,7 @@ function k_clique_graph(triangles::Set{Set{Int}})::SimpleGraph
 end
 
 """
-    community_detection(g::AbstractGraph, algo::KClique) -> Dict{Int, Int}
+    compute(algo::KClique, g::SimpleGraph) -> Dict{Int, Int}
 
 Detect communities in a graph `g` using the K-Clique algorithm.
 
@@ -217,8 +217,9 @@ graph where nodes represent triangles, and edges indicate overlap. The connected
 of this k-clique graph give the communities in the original graph.
 
 # Arguments
-- `g::AbstractGraph`: The graph on which to detect communities.
 - `algo::KClique`: Indicates that the K-Clique algorithm should be used for community detection.
+- `g::SimpleGraph`: The graph on which to detect communities.
+
 
 # Returns
 - A dictionary mapping node IDs in the original graph to their respective community IDs.
@@ -227,14 +228,14 @@ of this k-clique graph give the communities in the original graph.
 ```julia
 julia> using GraphCommunities
 julia> g = karate_club_graph()
-julia> community_detection(g, KClique())
+julia> compute(KClique(), g)
 ```
 
 # Notes
 Currently, the implementation is restricted to 3-cliques (triangles). Future versions might
 support other clique sizes.
 """
-function community_detection(g::AbstractGraph, algo::KClique)::Dict{Int, Int}
+function compute(algo::KClique, g::SimpleGraph)
     triangles = find_triangles(g)
     k_graph = k_clique_graph(triangles)
 
@@ -264,12 +265,12 @@ function labels_to_dict(labels::Vector{Set{Int}})::Dict{Int, Int}
 end
 
 """
-    label_propagation_sweep!(g::AbstractGraph, labels::Dict{Int, Int}, algo::LabelPropagation)
+    label_propagation_sweep!(g::SimpleGraph, labels::Dict{Int, Int}, algo::LabelPropagation)
 
 Perform a single iteration of the Label Propagation algorithm.
 
 # Arguments
-- `g::AbstractGraph`: The graph on which to detect communities.
+- `g::SimpleGraph`: The graph on which to detect communities.
 - `labels::Dict{Int, Int}`: A dictionary mapping each vertex to its community.
 - `algo::LabelPropagation`: Indicates that the Label Propagation algorithm should be used for community detection.
 
@@ -277,7 +278,7 @@ Perform a single iteration of the Label Propagation algorithm.
 This function is not intended to be called directly. Instead, use `community_detection`.
 """
 function label_propagation_sweep!(
-    g::AbstractGraph,
+    g::SimpleGraph,
     labels::Dict{Int, Int},
     algo::LabelPropagation
 )
@@ -323,7 +324,7 @@ end
 
 
 """
-    community_detection(g::AbstractGraph, algo::LabelPropagation) -> Dict{Int, Int}
+    compute(algo::LabelPropagation, g::SimpleGraph) -> Dict{Int, Int}
 
 Detect communities in a graph `g` using the Label Propagation algorithm.
 
@@ -332,8 +333,8 @@ each node adopts the label that is most frequent among its neighbors. The algori
 terminates when no node changes its label.
 
 # Arguments
-- `g::AbstractGraph`: The graph on which to detect communities.
 - `algo::LabelPropagation`: Indicates that the Label Propagation algorithm should be used for community detection.
+- `g::SimpleGraph`: The graph on which to detect communities.
 
 # Returns
 - A dictionary mapping node IDs in the original graph to their respective community IDs.
@@ -342,14 +343,14 @@ terminates when no node changes its label.
 ```julia
 julia> using GraphCommunities
 julia> g = karate_club_graph()
-julia> community_detection(g, LabelPropagation())
+julia> compute(LabelPropagation(), g)
 ```
 
 # Notes
 The algorithm may not return the same community structure on different runs due to its
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function community_detection(g::AbstractGraph, algo::LabelPropagation)::Dict{Int, Int}
+function compute(algo::LabelPropagation, g::SimpleGraph)
     # Initialize each node with a unique label.
     labels = Dict(v => v for v in vertices(g))
 
@@ -371,4 +372,44 @@ function community_detection(g::AbstractGraph, algo::LabelPropagation)::Dict{Int
     end
 
     return labels
+end
+
+function compute(algo::PageRank, graph::AbstractGraph)
+
+    N = nv(graph)
+    PR = fill(1.0 / N, N)  # Initial rank
+    old_PR = copy(PR)
+    is_weighted = isa(graph, SimpleWeightedGraph) || isa(graph, SimpleWeightedDiGraph)
+
+    # Out-Degree Weights
+    W = Vector{Float64}(undef, N)
+    for i in 1:N
+        if is_weighted
+            W[i] = sum(outneighbors(graph, i) .|> out_vertex -> get_weight(graph, i, out_vertex))
+        else
+            W[i] = outdegree(graph, i)
+        end
+    end
+
+    for _ in 1:algo.max_iter
+        for i in 1:N
+            s = 0.0
+            for j in inneighbors(graph, i)
+                wij = is_weighted ? get_weight(graph, j, i) : 1.0
+                s += wij * PR[j] / W[j]
+            end
+            PR[i] = (1 - algo.d) + algo.d * s
+        end
+
+        # Check for convergence
+        if maximum(abs.(PR - old_PR)) < algo.tol
+            break
+        end
+        old_PR = copy(PR)
+    end
+
+    # Normalize
+    PR ./= sum(PR)
+
+    return PR
 end
