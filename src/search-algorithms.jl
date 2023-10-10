@@ -22,8 +22,8 @@ the Breadth-First Search (BFS) algorithm.
 ```julia-repl
 julia> using Graphs, GraphCommunities
 julia> g = PathGraph(5)
-julia> compute(BFS(1, 5), g)           # Returns 4
-julia> compute(BFS(1, 5; return_path=true), g)  # Returns [1, 2, 3, 4, 5]
+julia> compute(BFS(src = 1, dst = 5), g)           # Returns 4
+julia> compute(BFS(src = 1, dst = 5, return_path=true), g)  # Returns [1, 2, 3, 4, 5]
 ```
 """
 function compute(

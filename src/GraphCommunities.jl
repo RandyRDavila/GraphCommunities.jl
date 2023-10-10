@@ -51,7 +51,7 @@ struct BFS <: SearchAlgorithm
     return_path::Bool
 end
 # Default constructor
-BFS(src, dst; return_path = false) = BFS(src, dst, return_path)
+BFS(; src = 1, dst = 2, return_path = false) = BFS(src, dst, return_path)
 
 # ============================
 # DETECTION ALGORITHMS
