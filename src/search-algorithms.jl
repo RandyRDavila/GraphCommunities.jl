@@ -1,40 +1,40 @@
 """
-    compute(::BFS, graph::AbstractGraph, start_node::Int, end_node::Int; return_path::Bool=false)
+    compute(alg::BFS, graph::AbstractGraph)
 
-Compute the shortest path or distance between `start_node` and `end_node` in a graph using
+Compute the shortest path or distance between `alg.src` and `alg.dst` in a graph using
 the Breadth-First Search (BFS) algorithm.
 
 # Arguments:
 - `::BFS`: An indicator for the BFS algorithm.
 - `graph::AbstractGraph`: The graph in which to find the shortest path or distance.
-- `start_node::Int`: The starting node index.
-- `end_node::Int`: The ending node index.
 
 # Keyword Arguments:
 - `return_path::Bool`: If true, the function returns the shortest path as an array of node indices.
   If false (the default), the function returns the shortest distance as an integer.
 
 # Returns:
-- If `return_path` is true: An array of integers representing the shortest path from `start_node`
-  to `end_node`. If there's no path, an empty array is returned.
-- If `return_path` is false (or omitted): An integer representing the shortest distance from `start_node`
-  to `end_node`. If the nodes aren't connected, `-1` is returned.
+- If `return_path` is true: An array of integers representing the shortest path from `alg.src`
+  to `alg.dst`. If there's no path, an empty array is returned.
+- If `return_path` is false (or omitted): An integer representing the shortest distance from `alg.src`
+  to `alg.end`. If the nodes aren't connected, `-1` is returned.
 
 # Example:
 ```julia-repl
 julia> using Graphs, GraphCommunities
 julia> g = PathGraph(5)
-julia> compute(BFS(), g, 1, 5)           # Returns 4
-julia> compute(BFS(), g, 1, 5, return_path=true)  # Returns [1, 2, 3, 4, 5]
+julia> compute(BFS(1, 5), g)           # Returns 4
+julia> compute(BFS(1, 5; return_path=true), g)  # Returns [1, 2, 3, 4, 5]
 ```
 """
 function compute(
-    ::BFS,
-    graph::AbstractGraph,
-    start_node::Int,
-    end_node::Int;
-    return_path::Bool=false
+    alg::BFS,
+    graph::AbstractGraph
 )
+    # Extract the arguments
+    start_node = alg.src
+    end_node = alg.dst
+    return_path = alg.return_path
+
     # Number of vertices in the graph
     n = nv(graph)
 

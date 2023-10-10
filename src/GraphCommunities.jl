@@ -45,7 +45,13 @@ abstract type SearchAlgorithm end
 # ============================
 
 # Breadth-First Search
-struct BFS <: SearchAlgorithm end
+struct BFS <: SearchAlgorithm
+    src::Int
+    dst::Int
+    return_path::Bool
+end
+# Default constructor
+BFS(src, dst; return_path = false) = BFS(src, dst, return_path)
 
 # ============================
 # DETECTION ALGORITHMS
