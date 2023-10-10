@@ -90,6 +90,12 @@ julia> compute(LabelPropagation(sync=true), g)
 julia> draw_communities(g, communities) # Draw the communities
 ```
 
+We can also compute the **Page Rank** of each vertex (node) in the graph:
+```julia
+julia> using GraphCommunities
+julia> g = generate(KarateClub());
+julia> compute(PageRank(), g)
+```
 ### Drawing Communities
 
 After detecting the communities, you can visualize them using the `draw_communities` function:
