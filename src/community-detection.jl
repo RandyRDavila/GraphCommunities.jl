@@ -1,5 +1,5 @@
 """
-    graph_modularity(g::SimpleGraph, node_to_community::Dict{Int, Int}) -> Number
+    graph_modularity(g::SimpleGraph, node_to_community::Dict{Int, Int})::Number
 
 Calculate the modularity of a graph `g` given a particular community assignment
 given by `node_to_community`.
@@ -11,10 +11,7 @@ given by `node_to_community`.
 # Returns
 - `Float64`: The modularity value.
 """
-function graph_modularity(
-    g::SimpleGraph,
-    node_to_community::Dict{Int, Int}
-)::Number
+function graph_modularity(g::SimpleGraph, node_to_community::Dict{Int, Int})::Number
 
     m = ne(g)  # Total number of edges in the graph.
     Q = 0.0   # Modularity to be built up incrementally.
@@ -22,10 +19,10 @@ function graph_modularity(
     # Precompute the degrees and adjacency information
     k = Dict(v => degree(g, v) for v in vertices(g))
     A = Dict(
-            (i, j) => has_edge(g, i, j) ? 1 : 0
-            for i in vertices(g)
-            for j in neighbors(g, i)
-        )
+        (i, j) => has_edge(g, i, j) ? 1 : 0
+        for i in vertices(g)
+        for j in neighbors(g, i)
+    )
 
     for i in vertices(g)
         ki = k[i]
@@ -43,7 +40,7 @@ end
 
 
 """
-    compute(algo::Louvain, g::SimpleGraph) -> Number
+    compute(algo::Louvain, g::SimpleGraph)
 
 Detect communities in a graph `g` using the Louvain algorithm, a method based on modularity optimization.
 
@@ -71,7 +68,7 @@ julia> compute(Louvain(), g)
 The algorithm may not return the same community structure on different runs due to its
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function compute(algo::Louvain, g::SimpleGraph)::Number
+function compute(algo::Louvain, g::SimpleGraph)
     # Initialization.
     node_to_community = Dict(v => v for v in vertices(g))
     community_hist = [deepcopy(node_to_community)]
@@ -146,7 +143,7 @@ function compute(algo::Louvain, g::SimpleGraph)::Number
 end
 
 """
-    find_triangles(g::SimpleGraph) -> Set{Set{Int}}
+    find_triangles(g::SimpleGraph)::Set{Set{Int}}
 
 Find all the triangles in the given graph.
 
@@ -156,7 +153,7 @@ Find all the triangles in the given graph.
 # Returns
 - A set containing all the triangles in the graph. Each triangle is represented as a set of 3 vertices.
 """
-function find_triangles(g::SimpleGraph)
+function find_triangles(g::SimpleGraph)::Set{Set{Int}}
     triangles = Set{Set{Int}}()
 
     for v in vertices(g)
@@ -177,7 +174,7 @@ function find_triangles(g::SimpleGraph)
 end
 
 """
-    k_clique_graph(triangles::Set{Set{Int}}) -> SimpleGraph
+    k_clique_graph(triangles::Set{Set{Int}})::SimpleGraph
 
 Construct a graph where each node represents a triangle from the input set,
 and edges are added between nodes if their respective triangles share two vertices.
@@ -208,7 +205,7 @@ function k_clique_graph(triangles::Set{Set{Int}})::SimpleGraph
 end
 
 """
-    compute(algo::KClique, g::SimpleGraph) -> Dict{Int, Int}
+    compute(algo::KClique, g::SimpleGraph)::Dict{Int, Int}
 
 Detect communities in a graph `g` using the K-Clique algorithm.
 
@@ -250,7 +247,7 @@ function compute(algo::KClique, g::SimpleGraph)
 end
 
 """
-    labels_to_dict(labels::Vector{Set{Int}}) -> Dict{Int, Int}
+    labels_to_dict(labels::Vector{Set{Int}})::Dict{Int, Int}
 
 Convert a vector of sets to a dictionary mapping each element to its index in the vector.
 """
@@ -324,7 +321,7 @@ end
 
 
 """
-    compute(algo::LabelPropagation, g::SimpleGraph) -> Dict{Int, Int}
+    compute(algo::LabelPropagation, g::SimpleGraph)::Dict{Int, Int}
 
 Detect communities in a graph `g` using the Label Propagation algorithm.
 
@@ -374,28 +371,29 @@ function compute(algo::LabelPropagation, g::SimpleGraph)
     return labels
 end
 
-function compute(algo::PageRank, graph::AbstractGraph)
 
-    N = nv(graph)
+function compute(algo::PageRank, g::AbstractGraph)
+
+    N = nv(g)
     PR = fill(1.0 / N, N)  # Initial rank
     old_PR = copy(PR)
-    is_weighted = isa(graph, SimpleWeightedGraph) || isa(graph, SimpleWeightedDiGraph)
+    is_weighted = isa(g, SimpleWeightedGraph) || isa(g, SimpleWeightedDiGraph)
 
     # Out-Degree Weights
     W = Vector{Float64}(undef, N)
     for i in 1:N
         if is_weighted
-            W[i] = sum(outneighbors(graph, i) .|> out_vertex -> get_weight(graph, i, out_vertex))
+            W[i] = sum(outneighbors(g, i) .|> out_vertex -> get_weight(g, i, out_vertex))
         else
-            W[i] = outdegree(graph, i)
+            W[i] = outdegree(g, i)
         end
     end
 
     for _ in 1:algo.max_iter
         for i in 1:N
             s = 0.0
-            for j in inneighbors(graph, i)
-                wij = is_weighted ? get_weight(graph, j, i) : 1.0
+            for j in inneighbors(g, i)
+                wij = is_weighted ? get_weight(g, j, i) : 1.0
                 s += wij * PR[j] / W[j]
             end
             PR[i] = (1 - algo.d) + algo.d * s

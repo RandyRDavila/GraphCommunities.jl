@@ -4,14 +4,14 @@ module GraphCommunities
 # IMPORTS
 # ============================
 
-using Colors
-using CSV
-using FilePathsBase
+# This package builds on top of the following two packages
 using Graphs
 using SimpleWeightedGraphs
-using GraphPlot
-using Random
-using DataFrames
+
+# Other functions from packages used in this package
+using Colors: distinguishable_colors
+using GraphPlot: gplot
+using Random: shuffle
 
 # ============================
 # ABSTRACT TYPES
