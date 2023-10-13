@@ -1,6 +1,6 @@
 # GraphCommunities.jl
 
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://randyrdavila.github.io/graphcommunities.jl/)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://randyrdavila.github.io/GraphCommunities.jl/)
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
