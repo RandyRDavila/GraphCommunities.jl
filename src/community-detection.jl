@@ -60,7 +60,9 @@ These phases are repeated until the modularity ceases to increase significantly.
 # Example
 ```julia
 julia> using GraphCommunities
-julia> g = karate_club_graph()
+
+julia> g = generate(PlantedPartition())
+
 julia> compute(Louvain(), g)
 ```
 
@@ -224,7 +226,9 @@ of this k-clique graph give the communities in the original graph.
 # Example
 ```julia
 julia> using GraphCommunities
-julia> g = karate_club_graph()
+
+julia> g = generate(KarateClub())
+
 julia> compute(KClique(), g)
 ```
 
@@ -339,7 +343,9 @@ terminates when no node changes its label.
 # Example
 ```julia
 julia> using GraphCommunities
-julia> g = karate_club_graph()
+
+julia> g = generate(KarateClub())
+
 julia> compute(LabelPropagation(), g)
 ```
 
@@ -371,7 +377,41 @@ function compute(algo::LabelPropagation, g::SimpleGraph)
     return labels
 end
 
+"""
+    compute(algo::PageRank, g::AbstractGraph)::Vector{Float64}
 
+Compute the PageRank values of the nodes in graph `g` using the PageRank algorithm.
+
+# Arguments
+
+- `algo::PageRank`: The PageRank algorithm configuration object. This should contain properties like
+  damping factor (`d`), maximum number of iterations (`max_iter`), and tolerance (`tol`).
+
+- `g::AbstractGraph`: The graph for which to compute the PageRank. This can be a simple graph, directed
+  graph, or a weighted version of these.
+
+# Returns
+
+- A vector of `Float64` where each entry represents the PageRank value of the corresponding node in the graph.
+
+# Details
+
+The function uses the power iteration method to compute the PageRank values. If the graph is weighted,
+the weights of the edges are taken into account while calculating the rank.
+
+The algorithm iteratively refines the PageRank values until either the maximum number of iterations
+is reached or the values converge within the specified tolerance.
+
+# Example
+
+```julia
+julia> g = generate(PlantedPartition())
+
+julia> algo = PageRank(d=0.85, max_iter=100, tol=1e-6)
+
+julia> compute(algo, g)
+```
+"""
 function compute(algo::PageRank, g::AbstractGraph)
 
     N = nv(g)
