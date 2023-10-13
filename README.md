@@ -1,6 +1,7 @@
 # GraphCommunities.jl
 
-[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://RandyRDavila.github.io/GraphCommunities.jl)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://randyrdavila.github.io/graphcommunities.jl/)
+
 
 
 `GraphCommunities.jl` is a Julia package designed for detecting communities within *undirected* graphs. It employs various community detection algorithms and also provides functionality for generating graphs with community structure. Currently, the package includes the following community detection algorithms:
