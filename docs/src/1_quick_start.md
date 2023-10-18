@@ -3,7 +3,7 @@ Start by importing the required modules:
 ```julia
 julia> using GraphCommunities
 
-julia> using GraphPlot # For visualizing the generated graphs
+julia> using GraphPlot: gplot # For visualizing the generated graphs
 ```
 ## Creating Graphs with Community Structure
 
