@@ -1,5 +1,11 @@
 # Quick Start Guide
+Start by importing the required modules:
+```julia
+julia> using GraphCommunities
 
+julia> using GraphPlot # For visualizing the generated graphs
+
+```
 ## Create a Community Graph
 
 A **planted partition graph** (also known as a **stochastic block model**) is a probabilistic graph model often used to generate synthetic networks with community structures for testing algorithms, especially community detection methods:
