@@ -33,7 +33,7 @@ julia> gplot(g)
 Detect communities using the **Louvain Algorithm** on a
 graph loaded from a csv edge list:
 ```julia
-julia> g = load_csv_graph("path_to_your_graph.csv");
+julia> g = load_csv_graph("<path_to_your_graph>.csv");
 
 julia> communities = compute(Louvain(), g); # Find communities using the Louvain algorithm
 
@@ -43,7 +43,7 @@ julia> draw_communities(g, communities) # Draw the communities
 Detect communities using the **K-clique Percolation Algorithm** on a
 graph loaded from a csv edge list:
 ```julia
-julia> g = load_csv_graph("path_to_your_graph.csv");
+julia> g = load_csv_graph("<path_to_your_graph>.csv");
 
 julia> compute(KClique(), g);
 
@@ -54,7 +54,7 @@ Detect communities using the **Label Propagation Algorithm** on the famous Karat
 ```julia
 julia> g = generate(KarateClub());
 
-julia> compute(LabelPropagation(), g)
+julia> compute(LabelPropagation(), g);
 
 julia> draw_communities(g, communities) # Draw the communities
 ```
@@ -63,7 +63,7 @@ Detect communities using the **Label Propagation Algorithm** on the famous Karat
 ```julia
 julia> g = generate(KarateClub());
 
-julia> compute(LabelPropagation(sync=true), g)
+julia> compute(LabelPropagation(sync=true), g);
 
 julia> draw_communities(g, communities) # Draw the communities
 ```
@@ -87,7 +87,7 @@ You can also save your graphs in various formats by using the `GraphIO` submodul
 ```julia
 julia> using GraphCommunities.GraphIO: write_edgelist
 
-julia> g = generate(ChainedCliques(;num_cliques=2, clique_size=6))
+julia> g = generate(ChainedCliques(;num_cliques=2, clique_size=6));
 
 julia> write_edgelist(g, "test-edgelist.csv") # write to a .csv file
 

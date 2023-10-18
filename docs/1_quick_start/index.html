@@ -7,27 +7,27 @@ julia&gt; gplot(g)</code></pre><p>Another graph with community structure can be 
 
 julia&gt; gplot(g)</code></pre><p>This package also includes the well-known <strong>Karate Club Graph</strong> as an example dataset to test algorithms on:</p><pre><code class="language-julia hljs">julia&gt; g = generate(KarateClub());
 
-julia&gt; gplot(g)</code></pre><h2 id="Community-Detection-Algorithms"><a class="docs-heading-anchor" href="#Community-Detection-Algorithms">Community Detection Algorithms</a><a id="Community-Detection-Algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Community-Detection-Algorithms" title="Permalink"></a></h2><p>Detect communities using the <strong>Louvain Algorithm</strong> on a graph loaded from a csv edge list:</p><pre><code class="language-julia hljs">julia&gt; g = load_csv_graph(&quot;path_to_your_graph.csv&quot;);
+julia&gt; gplot(g)</code></pre><h2 id="Community-Detection-Algorithms"><a class="docs-heading-anchor" href="#Community-Detection-Algorithms">Community Detection Algorithms</a><a id="Community-Detection-Algorithms-1"></a><a class="docs-heading-anchor-permalink" href="#Community-Detection-Algorithms" title="Permalink"></a></h2><p>Detect communities using the <strong>Louvain Algorithm</strong> on a graph loaded from a csv edge list:</p><pre><code class="language-julia hljs">julia&gt; g = load_csv_graph(&quot;&lt;path_to_your_graph&gt;.csv&quot;);
 
 julia&gt; communities = compute(Louvain(), g); # Find communities using the Louvain algorithm
 
-julia&gt; draw_communities(g, communities) # Draw the communities</code></pre><p>Detect communities using the <strong>K-clique Percolation Algorithm</strong> on a graph loaded from a csv edge list:</p><pre><code class="language-julia hljs">julia&gt; g = load_csv_graph(&quot;path_to_your_graph.csv&quot;);
+julia&gt; draw_communities(g, communities) # Draw the communities</code></pre><p>Detect communities using the <strong>K-clique Percolation Algorithm</strong> on a graph loaded from a csv edge list:</p><pre><code class="language-julia hljs">julia&gt; g = load_csv_graph(&quot;&lt;path_to_your_graph&gt;.csv&quot;);
 
 julia&gt; compute(KClique(), g);
 
 julia&gt; draw_communities(g, communities) # Draw the communities</code></pre><p>Detect communities using the <strong>Label Propagation Algorithm</strong> on the famous Karate Club Graph using <strong>asynchronous</strong> label updates::</p><pre><code class="language-julia hljs">julia&gt; g = generate(KarateClub());
 
-julia&gt; compute(LabelPropagation(), g)
+julia&gt; compute(LabelPropagation(), g);
 
 julia&gt; draw_communities(g, communities) # Draw the communities</code></pre><p>Detect communities using the <strong>Label Propagation Algorithm</strong> on the famous Karate Club Graph using <strong>synchronous</strong> label updates:</p><pre><code class="language-julia hljs">julia&gt; g = generate(KarateClub());
 
-julia&gt; compute(LabelPropagation(sync=true), g)
+julia&gt; compute(LabelPropagation(sync=true), g);
 
 julia&gt; draw_communities(g, communities) # Draw the communities</code></pre><p>We can also compute the <strong>Page Rank</strong> of each vertex (node) in the graph:</p><pre><code class="language-julia hljs">julia&gt; g = generate(KarateClub());
 
 julia&gt; compute(PageRank(), g)</code></pre><h3 id="Drawing-Communities"><a class="docs-heading-anchor" href="#Drawing-Communities">Drawing Communities</a><a id="Drawing-Communities-1"></a><a class="docs-heading-anchor-permalink" href="#Drawing-Communities" title="Permalink"></a></h3><p>After detecting the communities, you can visualize them using the <code>draw_communities</code> function:</p><pre><code class="language-julia hljs">julia&gt; draw_communities(g, communities) # Draw the communities</code></pre><h2 id="Saving-Graphs-and-Loading-Graphs"><a class="docs-heading-anchor" href="#Saving-Graphs-and-Loading-Graphs">Saving Graphs and Loading Graphs</a><a id="Saving-Graphs-and-Loading-Graphs-1"></a><a class="docs-heading-anchor-permalink" href="#Saving-Graphs-and-Loading-Graphs" title="Permalink"></a></h2><p>You can also save your graphs in various formats by using the <code>GraphIO</code> submodule:</p><pre><code class="language-julia hljs">julia&gt; using GraphCommunities.GraphIO: write_edgelist
 
-julia&gt; g = generate(ChainedCliques(;num_cliques=2, clique_size=6))
+julia&gt; g = generate(ChainedCliques(;num_cliques=2, clique_size=6));
 
 julia&gt; write_edgelist(g, &quot;test-edgelist.csv&quot;) # write to a .csv file
 
@@ -35,4 +35,4 @@ julia&gt; write_edgelist(g, &quot;test-edgelist.txt&quot;) # write to a text fil
 
 julia&gt; g1 = load_edgelist(&quot;test-edgelist.csv&quot;)
 
-julia&gt; g2 = load_edgelist(&quot;test-edgelist.txt&quot;)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Welcome to GraphCommunities.jl</a><a class="docs-footer-nextpage" href="../2_graph_generators/">Graph Generators »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.1 on <span class="colophon-date" title="Tuesday 17 October 2023 19:45">Tuesday 17 October 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
+julia&gt; g2 = load_edgelist(&quot;test-edgelist.txt&quot;)</code></pre></article><nav class="docs-footer"><a class="docs-footer-prevpage" href="../">« Welcome to GraphCommunities.jl</a><a class="docs-footer-nextpage" href="../2_graph_generators/">Graph Generators »</a><div class="flexbox-break"></div><p class="footer-message">Powered by <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> and the <a href="https://julialang.org/">Julia Programming Language</a>.</p></nav></div><div class="modal" id="documenter-settings"><div class="modal-background"></div><div class="modal-card"><header class="modal-card-head"><p class="modal-card-title">Settings</p><button class="delete"></button></header><section class="modal-card-body"><p><label class="label">Theme</label><div class="select"><select id="documenter-themepicker"><option value="documenter-light">documenter-light</option><option value="documenter-dark">documenter-dark</option><option value="auto">Automatic (OS)</option></select></div></p><hr/><p>This document was generated with <a href="https://github.com/JuliaDocs/Documenter.jl">Documenter.jl</a> version 1.1.1 on <span class="colophon-date" title="Tuesday 17 October 2023 19:52">Tuesday 17 October 2023</span>. Using Julia version 1.9.3.</p></section><footer class="modal-card-foot"></footer></div></div></div></body></html>
