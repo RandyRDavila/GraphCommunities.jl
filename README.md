@@ -25,11 +25,12 @@ To add the `GraphCommunities` package to your Julia environment, you can use the
 After the package is added, you can use it in your Julia sessions with:
 
 ```julia
-using GraphCommunities
+julia> using GraphCommunities
 ```
 
-```
-
-## Author
+**Author**
 
 Randy R. Davila, PhD
+
+* Lecturer of Computational Applied Mathematics & Operations Research at Rice University.
+* Software Engineer at RelationalAI.
