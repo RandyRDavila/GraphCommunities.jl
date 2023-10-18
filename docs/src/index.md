@@ -10,6 +10,8 @@
 
 If you're new to Graphs.jl, it's recommended to check out their [documentation](https://github.com/JuliaGraphs/Graphs.jl) to get a deeper understanding of the graph structures and operations you can leverage.
 
+Finally, `GraphCommunities.jl` also has built in functionality for generating graphs with community like structure.
+
 ## Installation
 
 To add the `GraphCommunities` package to your Julia environment, you can use the Julia package manager. In the Julia REPL, enter the package manager by pressing `]`, then run:
