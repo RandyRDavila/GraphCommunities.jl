@@ -121,9 +121,10 @@ community structures in large-scale networks. Physical review E, 76(3), 036106.
 """
 struct LabelPropagation <: CommunityDetectionAlgorithm
     synchronous::Bool
+    max_iter::Int
 end
 # Default constructor
-LabelPropagation(;sync = false) = LabelPropagation(sync)
+LabelPropagation(;sync = false, max_iter = 10_000) = LabelPropagation(sync, max_iter)
 
 # PageRank
 """

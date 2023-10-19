@@ -361,7 +361,7 @@ function compute(algo::LabelPropagation, g::SimpleGraph)
     prev_labels = deepcopy(labels)
 
     # Max iteration limit to prevent infinite loops.
-    max_iter = 10_000
+    max_iter = algo.max_iter
 
     # Iteration variable.
     iter = 0
