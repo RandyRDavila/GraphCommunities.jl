@@ -36,6 +36,27 @@ An abstract type representing a graph with community structure.
 """
 abstract type CommunityGraph end
 
+"""
+    SearchAlgorithm
+
+Abstract type representing a search algorithm. This serves as the base type
+for various search algorithms implemented in the package.
+"""
+abstract type SearchAlgorithm end
+
+# ============================
+# SEARCH ALGORITHMS
+# ============================
+
+# Breadth-First Search
+struct BFS <: SearchAlgorithm
+    src::Int
+    dst::Int
+    return_path::Bool
+end
+# Default constructor
+BFS(; src = 1, dst = 2, return_path = false) = BFS(src, dst, return_path)
+
 # ============================
 # DETECTION ALGORITHMS
 # ============================
@@ -270,6 +291,7 @@ include("community-detection.jl")
 include("visualizations.jl")
 include("graph-constructors.jl")
 include("Experimental.jl")
+include("search-algorithms.jl")
 
 # ============================
 # EXPORTS
@@ -280,6 +302,7 @@ export find_triangles
 export compute
 export draw_communities
 export generate
+export BFS
 export Louvain
 export KClique
 export PageRank
