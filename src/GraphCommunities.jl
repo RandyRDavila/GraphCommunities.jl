@@ -266,7 +266,10 @@ struct KarateClub <: CommunityGraph end
 # ============================
 
 include("GraphIO.jl")
-include("community-detection.jl")
+include("algorithms/label-propagation.jl")
+include("algorithms/louvain.jl")
+include("algorithms/k-clique.jl")
+include("algorithms/pagerank.jl")
 include("visualizations.jl")
 include("graph-constructors.jl")
 include("Experimental.jl")
