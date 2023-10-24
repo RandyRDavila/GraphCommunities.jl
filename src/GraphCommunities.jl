@@ -120,9 +120,9 @@ communities = compute(LabelPropagation(sync=true), graph)   # Synchronous
 * Raghavan, U. N., Albert, R., & Kumara, S. (2007). Near linear time algorithm to detect
 community structures in large-scale networks. Physical review E, 76(3), 036106.
 """
-struct LabelPropagation <: CommunityDetectionAlgorithm
-    synchronous::Bool
-    max_iter::Int
+struct LabelPropagation{SyncT <: Bool, IterT <: Int64} <: CommunityDetectionAlgorithm
+    synchronous::SyncT
+    max_iter::IterT
 end
 # Default constructor
 LabelPropagation(;sync = false, max_iter = 10_000) = LabelPropagation(sync, max_iter)
@@ -156,10 +156,10 @@ pageranks = compute(PageRank(d=0.9, tol=1e-7, max_iter=150), graph)
 
 * Page, L., Brin, S., Motwani, R., & Winograd, T. (1999). The PageRank citation ranking: Bringing order to the web. Stanford InfoLab.
 """
-struct PageRank <: CommunityDetectionAlgorithm
-    d::Float64
-    tol::Float64
-    max_iter::Int
+struct PageRank{DT <: Float64, TolT <: Float64, IterT <: Int64} <: CommunityDetectionAlgorithm
+    d::DT
+    tol::TolT
+    max_iter::IterT
 end
 # Default constructor
 PageRank(;d = 0.85, tol = 1e-6, max_iter = 100) = PageRank(d, tol, max_iter)
