@@ -13,7 +13,7 @@ Draw the graph `g` with nodes colored based on their community assignments.
 # Note
 This function will only work if each node in the graph is assigned to a community.
 """
-function draw_communities(g::AbstractGraph, communities::Dict)
+function draw_communities(g::AbstractGraph, communities::Dict{Int, Int})
     # Ensure every vertex has a community.
     for v in vertices(g)
         if !haskey(communities, v)
@@ -21,13 +21,23 @@ function draw_communities(g::AbstractGraph, communities::Dict)
         end
     end
 
+    _draw_communities(g, communities)
+end
+
+function draw_communities(g::AbstractGraph, communities::Vector{Int})
+    # Convert the Vector to Dict.
+    community_dict = Dict{Int, Int}(v => communities[v] for v in vertices(g))
+    _draw_communities(g, community_dict)
+end
+
+function _draw_communities(g::AbstractGraph, communities::Dict{Int, Int})
     # Map each unique community to a color.
     unique_communities = unique(values(communities))
     colors = distinguishable_colors(length(unique_communities))
 
     community_to_color = Dict(
-            unique_communities[i] => colors[i] for i in eachindex(unique_communities)
-        )
+        unique_communities[i] => colors[i] for i in eachindex(unique_communities)
+    )
     node_colors = [community_to_color[communities[v]] for v in vertices(g)]
 
     # Generate the plot.
