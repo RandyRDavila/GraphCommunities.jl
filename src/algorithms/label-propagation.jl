@@ -11,7 +11,7 @@ const VertexList = Vector{Int}
 Update the count of labels based on the neighbors of a given vertex.
 
 # Arguments
-- `label_counts::Vector{Int}`: An array to store the count of each label.
+- `label_counts::LabelArray`: An array to store the count of each label.
 - `labels::LabelArray`: An array where each index corresponds to a vertex and its value corresponds to its label.
 - `neighbors::VertexList`: List of neighboring vertices for the vertex being considered.
 
@@ -19,9 +19,9 @@ Update the count of labels based on the neighbors of a given vertex.
 This function is used internally by `label_propagation_sweep!` to update the label counts for the vertices.
 """
 function update_label_counts!(
-    label_counts::Vector{Int},
+    label_counts::LabelArray,
     labels::LabelArray,
-    neighbors::VertexList
+    neighbors::VertexList,
 )
     for w in neighbors
         label = labels[w]
@@ -30,7 +30,7 @@ function update_label_counts!(
 end
 
 """
-    random_argmax(arr::AbstractArray)
+    random_argmax(arr::AbstractArray)::Int
 
 Find all indices corresponding to the maximum value of the array and randomly return one of them.
 
@@ -43,7 +43,8 @@ Find all indices corresponding to the maximum value of the array and randomly re
 # Notes
 If multiple maxima exist in the array, one of them is chosen uniformly at random.
 """
-function random_argmax(arr::AbstractArray)
+function random_argmax(arr::AbstractArray)::Int
+    length(arr) == 1 && return arr[1]
     max_val = maximum(arr)
     max_indices = findall(x -> x == max_val, arr)
     return rand(max_indices)
@@ -61,7 +62,7 @@ Perform a single iteration of the Label Propagation algorithm on the provided gr
 - `algo::LabelPropagation`: An instance indicating the settings of the Label Propagation algorithm.
 - `X::VertexList`: A list of vertices to be considered for the propagation in the given iteration.
 - `new_labels::LabelArray`: An array to store new labels if the algorithm is running in synchronous mode.
-- `label_counts::Vector{Int}`: An array to store counts of each label during propagation.
+- `label_counts::LabelArray`: An array to store counts of each label during propagation.
 
 # Notes
 The function modifies the given `labels` array in-place, reflecting the label changes during propagation.
@@ -72,11 +73,12 @@ function label_propagation_sweep!(
     algo::LabelPropagation,
     X::VertexList,
     new_labels::LabelArray,
-    label_counts::Vector{Int}
+    label_counts::LabelArray,
 )
+    # Randomly permute the vertices.
     shuffle!(X)
-    fill!(label_counts, 0)
 
+    # For each node we map to the label that is most frequent among its neighbors.
     for v in X
         neighbors_v = neighbors(g, v)
         if !isempty(neighbors_v)
@@ -131,12 +133,15 @@ function compute(
     algo::LabelPropagation,
     g::SimpleGraph
 )::LabelArray
-    n = nv(g)
-    labels = collect(1:n)
-    new_labels = zeros(Int, n)
-    label_counts = zeros(Int, n)
-    X = collect(vertices(g))
 
+    # Get the number of vertices in the graph.
+    n = nv(g)
+
+    # These assignments are too repetitive. Can we do better?
+    labels, X = collect(1:n), collect(1:n)
+    new_labels, label_counts = zeros(Int, n), zeros(Int, n)
+
+    # Run the algorithm.
     prev_hash = hash(labels)
     label_propagation_sweep!(g, labels, algo, X, new_labels, label_counts)
     iter = 1
