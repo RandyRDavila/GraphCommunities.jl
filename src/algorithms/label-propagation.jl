@@ -1,77 +1,118 @@
-"""
-    label_propagation_sweep!(g::SimpleGraph, labels::Dict{Int, Int}, algo::LabelPropagation)
 
-Perform a single iteration of the Label Propagation algorithm.
+# Type alias for an array of labels, with each label being an integer.
+const LabelArray = Vector{Int}
+
+# Type alias for a list of vertices, with each vertex represented as an integer.
+const VertexList = Vector{Int}
+
+"""
+    update_label_counts!(label_counts::Vector{Int}, labels::LabelArray, neighbors::VertexList)
+
+Update the count of labels based on the neighbors of a given vertex.
+
+# Arguments
+- `label_counts::Vector{Int}`: An array to store the count of each label.
+- `labels::LabelArray`: An array where each index corresponds to a vertex and its value corresponds to its label.
+- `neighbors::VertexList`: List of neighboring vertices for the vertex being considered.
+
+# Notes
+This function is used internally by `label_propagation_sweep!` to update the label counts for the vertices.
+"""
+function update_label_counts!(
+    label_counts::Vector{Int},
+    labels::LabelArray,
+    neighbors::VertexList
+)
+    for w in neighbors
+        label = labels[w]
+        label_counts[label] += 1
+    end
+end
+
+"""
+    random_argmax(arr::AbstractArray)
+
+Find all indices corresponding to the maximum value of the array and randomly return one of them.
+
+# Arguments
+- `arr::AbstractArray`: An array of values.
+
+# Returns
+- An index corresponding to a randomly selected maximum value of the array.
+
+# Notes
+If multiple maxima exist in the array, one of them is chosen uniformly at random.
+"""
+function random_argmax(arr::AbstractArray)
+    max_val = maximum(arr)
+    max_indices = findall(x -> x == max_val, arr)
+    return rand(max_indices)
+end
+
+"""
+    label_propagation_sweep!(g::SimpleGraph, labels::LabelArray, algo::LabelPropagation,
+                             X::VertexList, new_labels::LabelArray, label_counts::Vector{Int})
+
+Perform a single iteration of the Label Propagation algorithm on the provided graph.
 
 # Arguments
 - `g::SimpleGraph`: The graph on which to detect communities.
-- `labels::Dict{Int, Int}`: A dictionary mapping each vertex to its community.
-- `algo::LabelPropagation`: Indicates that the Label Propagation algorithm should be used for community detection.
+- `labels::LabelArray`: An array where each index corresponds to a vertex and its value to its community label.
+- `algo::LabelPropagation`: An instance indicating the settings of the Label Propagation algorithm.
+- `X::VertexList`: A list of vertices to be considered for the propagation in the given iteration.
+- `new_labels::LabelArray`: An array to store new labels if the algorithm is running in synchronous mode.
+- `label_counts::Vector{Int}`: An array to store counts of each label during propagation.
 
 # Notes
-This function is not intended to be called directly. Instead, use `community_detection`.
+The function modifies the given `labels` array in-place, reflecting the label changes during propagation.
 """
 function label_propagation_sweep!(
     g::SimpleGraph,
-    labels::Dict{Int, Int},
-    algo::LabelPropagation
+    labels::LabelArray,
+    algo::LabelPropagation,
+    X::VertexList,
+    new_labels::LabelArray,
+    label_counts::Vector{Int}
 )
-    # Consider the vertices in a random order.
-    X = shuffle(vertices(g))
+    shuffle!(X)
+    fill!(label_counts, 0)
 
-    new_labels = Dict{Int, Int}()
-
-    # For each node in this ordering apply the label update rule.
     for v in X
         neighbors_v = neighbors(g, v)
-        # Only update the label if the node has neighbors.
-        if length(neighbors_v) > 0
-            label_counts = Dict()
-            for w in neighbors_v
-                label = labels[w]
-                if haskey(label_counts, label)
-                    label_counts[label] += 1
-                else
-                    label_counts[label] = 1
-                end
-            end
+        if !isempty(neighbors_v)
+            update_label_counts!(label_counts, labels, neighbors_v)
+            max_label = random_argmax(label_counts)
 
-            # Find the label that is most frequent among the neighbors of v.
-            max_label = findmax(label_counts)[2]
-
-            # If synchronous, store new labels separately.
             if algo.synchronous
                 new_labels[v] = max_label
             else
                 labels[v] = max_label
             end
+
+            fill!(label_counts, 0)
         end
     end
 
-    # If synchronous, apply all updates simultaneously.
     if algo.synchronous
-        for v in keys(new_labels)
-            labels[v] = new_labels[v]
-        end
+        labels .= new_labels
     end
 end
 
-
 """
-    compute(algo::LabelPropagation, g::SimpleGraph)::Dict{Int, Int}
+    compute(algo::LabelPropagation, g::SimpleGraph)::LabelArray
 
 Detect communities in a graph `g` using the Label Propagation algorithm.
 
-The algorithm works by assigning each node a unique label. Then, in each iteration,
+The algorithm works by initially assigning each node a unique label. Then, in each iteration,
 each node adopts the label that is most frequent among its neighbors. The algorithm
-terminates when no node changes its label.
+terminates when no node changes its label or after reaching a maximum number of iterations.
 
 # Arguments
-- `algo::LabelPropagation`: Indicates that the Label Propagation algorithm should be used for community detection.
+- `algo::LabelPropagation`: An instance indicating the settings of the Label Propagation algorithm.
 - `g::SimpleGraph`: The graph on which to detect communities.
 
 # Returns
-- A dictionary mapping node IDs in the original graph to their respective community IDs.
+- A `LabelArray` where each index corresponds to a vertex and its value indicates its community label.
 
 # Example
 ```julia
@@ -79,31 +120,29 @@ julia> using GraphCommunities
 
 julia> g = generate(KarateClub())
 
-julia> compute(LabelPropagation(), g)
+julia> communities = compute(LabelPropagation(), g)
 ```
 
 # Notes
 The algorithm may not return the same community structure on different runs due to its
 heuristic nature. However, the structures should be reasonably similar and of comparable quality.
 """
-function compute(algo::LabelPropagation, g::SimpleGraph)
-    # Initialize each node with a unique label.
-    labels = Dict(v => v for v in vertices(g))
+function compute(
+    algo::LabelPropagation,
+    g::SimpleGraph
+)::LabelArray
+    n = nv(g)
+    labels = collect(1:n)
+    new_labels = zeros(Int, n)
+    label_counts = zeros(Int, n)
+    X = collect(vertices(g))
 
-    # Run label propagation until convergence.
-    prev_labels = deepcopy(labels)
-
-    # Max iteration limit to prevent infinite loops.
-    max_iter = algo.max_iter
-
-    # Iteration variable.
-    iter = 0
-
-    # Run label propagation until convergence or max_iter is reached.
-    label_propagation_sweep!(g, labels, algo)
-    while labels != prev_labels && iter < max_iter
-        prev_labels = deepcopy(labels)
-        label_propagation_sweep!(g, labels, algo)
+    prev_hash = hash(labels)
+    label_propagation_sweep!(g, labels, algo, X, new_labels, label_counts)
+    iter = 1
+    while hash(labels) != prev_hash && iter < algo.max_iter
+        prev_hash = hash(labels)
+        label_propagation_sweep!(g, labels, algo, X, new_labels, label_counts)
         iter += 1
     end
 

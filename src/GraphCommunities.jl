@@ -11,7 +11,8 @@ using SimpleWeightedGraphs
 # Other functions from packages used in this package
 using Colors: distinguishable_colors
 using GraphPlot: gplot
-using Random: shuffle
+using Random: shuffle, shuffle!
+using DataStructures
 
 # ============================
 # ABSTRACT TYPES
