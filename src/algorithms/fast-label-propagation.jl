@@ -213,7 +213,7 @@ function _preprocess_graph(g::SimpleGraph)
 end
 
 """
-    compute(algo::FastLabelPropagation, g::SimpleGraph)
+    compute(algo::FastLPA, g::SimpleGraph)
 
 Execute the Fast Label Propagation algorithm on a graph.
 
@@ -234,9 +234,17 @@ and the number of vertices, then applies synchronous label propagation if enable
 - This function delegates to `_sync_label_propagation` for the actual label propagation process.
 - Currently, only synchronous label propagation is implemented. If `algo.synchronous` is `false`,
   the function will return `nothing`.
+
+# Example
+
+```julia
+julia> g = generate(PlantedPartition())
+
+julia> compute(FastLPA(), g)
+```
 """
 function compute(
-    algo::FastLabelPropagation,
+    algo::FastLPA,
     g::SimpleGraph,
 )
     edge_list, num_vertices = _preprocess_graph(g)
@@ -245,7 +253,7 @@ function compute(
 end
 
 """
-    compute(algo::FastLabelPropagation, edge_list::Vector{Tuple{Int,Int}}, num_vertices::Int)
+    compute(algo::FastLPA, edge_list::Vector{Tuple{Int,Int}}, num_vertices::Int)
 
 Execute the Fast Label Propagation algorithm using a precomputed edge list.
 
@@ -254,7 +262,7 @@ It's particularly useful when the edge list has been precomputed or when working
 that doesn't conform to a SimpleGraph.
 
 # Arguments
-- `algo::FastLabelPropagation`: The Fast Label Propagation algorithm instance.
+- `algo::FastLPA`: The Fast Label Propagation algorithm instance.
 - `edge_list::Vector{Tuple{Int,Int}}`: The edge list of the graph, where each edge is represented as a tuple of vertex indices.
 - `num_vertices::Int`: The number of vertices in the graph.
 
@@ -267,7 +275,7 @@ that doesn't conform to a SimpleGraph.
 - Only synchronous label propagation is currently implemented.
 """
 function compute(
-    algo::FastLabelPropagation,
+    algo::FastLPA,
     edge_list::Vector{Tuple{Int,Int}},
     num_vertices::Int,
 )
