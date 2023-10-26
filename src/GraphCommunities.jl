@@ -106,7 +106,10 @@ The algorithm can be run in either synchronous or asynchronous mode:
 - **Asynchronous**: Nodes update their labels in a random order.
 
 # Arguments
-- `synchronous::Bool`: If `true`, updates labels in synchronous mode; if `false` (default), updates labels in asynchronous mode.
+- `synchronous::Bool`: If `true`, updates labels in synchronous mode; if `false` (default),
+updates labels in asynchronous mode.
+- `max_iter::Int`: Maximum number of iterations (default is 100). If the algorithm doesn't
+converge within this number of iterations, it will halt and return the current vector.
 
 # Usage
 
@@ -125,7 +128,54 @@ struct LabelPropagation{SyncT <: Bool, IterT <: Int64} <: CommunityDetectionAlgo
     max_iter::IterT
 end
 # Default constructor
-LabelPropagation(;sync = false, max_iter = 10_000) = LabelPropagation(sync, max_iter)
+LabelPropagation(;
+    sync = false,
+    max_iter = 100,
+) = LabelPropagation(sync, max_iter)
+
+# Label Propagation
+"""
+    FastLabelPropagation <: CommunityDetectionAlgorithm
+
+The (Fast) Label Propagation algorithm for community detection in networks.
+
+The Label Propagation algorithm identifies communities based on the diffusion of labels
+throughout the graph. Nodes adopt the label that is most common among their neighbors.
+This process iteratively refines labels until a consensus or stable state is reached,
+where nodes have predominantly the same label as their neighbors.
+
+The algorithm can be run in either synchronous or asynchronous mode:
+
+- **Synchronous**: All nodes update their labels simultaneously in each iteration.
+- **Asynchronous**: Nodes update their labels in a random order.
+
+# Arguments
+- `synchronous::Bool`: If `true`, updates labels in synchronous mode; if `false` (default),
+updates labels in asynchronous mode.
+- `max_iter::Int`: Maximum number of iterations (default is 100). If the algorithm doesn't
+converge within this number of iterations, it will halt and return the current vector.
+
+# Usage
+
+```julia
+communities = compute(LabelPropagation(), graph)            # Asynchronous (default)
+communities = compute(LabelPropagation(sync=true), graph)   # Synchronous
+```
+
+# References
+
+* Raghavan, U. N., Albert, R., & Kumara, S. (2007). Near linear time algorithm to detect
+community structures in large-scale networks. Physical review E, 76(3), 036106.
+"""
+struct FastLabelPropagation{SyncT <: Bool, IterT <: Int64} <: CommunityDetectionAlgorithm
+    synchronous::SyncT
+    max_iter::IterT
+end
+# Default constructor
+FastLabelPropagation(;
+    sync = true,
+    max_iter = 100,
+) = FastLabelPropagation(sync, max_iter)
 
 # PageRank
 """
@@ -268,6 +318,7 @@ struct KarateClub <: CommunityGraph end
 
 include("GraphIO.jl")
 include("algorithms/label-propagation.jl")
+include("algorithms/fast-label-propagation.jl")
 include("algorithms/louvain.jl")
 include("algorithms/k-clique.jl")
 include("algorithms/pagerank.jl")
@@ -288,6 +339,7 @@ export Louvain
 export KClique
 export PageRank
 export LabelPropagation
+export FastLabelPropagation
 export ChainedCliques
 export PlantedPartition
 export KarateClub
