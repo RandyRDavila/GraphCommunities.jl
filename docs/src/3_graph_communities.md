@@ -6,6 +6,7 @@ The primary function that this package includes is the `compute` function which 
 Louvain
 KClique
 LabelPropagation
+FastLPA
 PageRank
 compute
 ```

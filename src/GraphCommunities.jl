@@ -135,7 +135,7 @@ LabelPropagation(;
 
 # Label Propagation
 """
-    FastLabelPropagation <: CommunityDetectionAlgorithm
+    FastLPA <: CommunityDetectionAlgorithm
 
 The (Fast) Label Propagation algorithm for community detection in networks.
 
@@ -147,7 +147,7 @@ where nodes have predominantly the same label as their neighbors.
 The algorithm can be run in either synchronous or asynchronous mode:
 
 - **Synchronous**: All nodes update their labels simultaneously in each iteration.
-- **Asynchronous**: Nodes update their labels in a random order.
+- **Asynchronous**: Nodes update their labels in a random order (not yet implemented).
 
 # Arguments
 - `synchronous::Bool`: If `true`, updates labels in synchronous mode; if `false` (default),
@@ -158,8 +158,7 @@ converge within this number of iterations, it will halt and return the current v
 # Usage
 
 ```julia
-communities = compute(LabelPropagation(), graph)            # Asynchronous (default)
-communities = compute(LabelPropagation(sync=true), graph)   # Synchronous
+communities = compute(FastLPA(), graph)            # Synchronous (default)
 ```
 
 # References
@@ -167,15 +166,15 @@ communities = compute(LabelPropagation(sync=true), graph)   # Synchronous
 * Raghavan, U. N., Albert, R., & Kumara, S. (2007). Near linear time algorithm to detect
 community structures in large-scale networks. Physical review E, 76(3), 036106.
 """
-struct FastLabelPropagation{SyncT <: Bool, IterT <: Int64} <: CommunityDetectionAlgorithm
+struct FastLPA{SyncT <: Bool, IterT <: Int64} <: CommunityDetectionAlgorithm
     synchronous::SyncT
     max_iter::IterT
 end
 # Default constructor
-FastLabelPropagation(;
+FastLPA(;
     sync = true,
     max_iter = 100,
-) = FastLabelPropagation(sync, max_iter)
+) = FastLPA(sync, max_iter)
 
 # PageRank
 """
@@ -339,7 +338,7 @@ export Louvain
 export KClique
 export PageRank
 export LabelPropagation
-export FastLabelPropagation
+export FastLPA
 export ChainedCliques
 export PlantedPartition
 export KarateClub
