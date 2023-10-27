@@ -324,6 +324,7 @@ include("algorithms/pagerank.jl")
 include("visualizations.jl")
 include("graph-constructors.jl")
 include("Experimental.jl")
+include("community_analysis.jl")
 
 # ============================
 # EXPORTS
@@ -333,6 +334,7 @@ export graph_modularity
 export find_triangles
 export compute
 export draw_communities
+export number_of_communities
 export generate
 export Louvain
 export KClique
