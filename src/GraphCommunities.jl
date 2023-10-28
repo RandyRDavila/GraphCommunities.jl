@@ -318,6 +318,7 @@ struct KarateClub <: CommunityGraph end
 include("GraphIO.jl")
 include("algorithms/label-propagation.jl")
 include("algorithms/fast-label-propagation.jl")
+include("algorithms/fast-weighted-label-propagation.jl")
 include("algorithms/louvain.jl")
 include("algorithms/k-clique.jl")
 include("algorithms/pagerank.jl")
