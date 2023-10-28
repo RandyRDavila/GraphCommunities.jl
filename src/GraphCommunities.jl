@@ -315,17 +315,19 @@ struct KarateClub <: CommunityGraph end
 # MODULE INCLUDES
 # ============================
 
-include("GraphIO.jl")
+include("GraphIO/GraphIO.jl")
 include("algorithms/label-propagation.jl")
 include("algorithms/fast-label-propagation.jl")
 include("algorithms/fast-weighted-label-propagation.jl")
 include("algorithms/louvain.jl")
 include("algorithms/k-clique.jl")
 include("algorithms/pagerank.jl")
-include("visualizations.jl")
-include("graph-constructors.jl")
-include("Experimental.jl")
-include("community_analysis.jl")
+include("algorithms/Experimental.jl")
+include("community-structure/visualizations.jl")
+include("community-structure/community_analysis.jl")
+include("graph-constructors/graph-constructors.jl")
+
+
 
 # ============================
 # EXPORTS
