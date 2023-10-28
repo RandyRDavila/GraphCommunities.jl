@@ -178,6 +178,6 @@ function compute(
     g::SimpleWeightedGraph,
 )
     edge_list, num_vertices = _preprocess_graph(g)
-    algo.synchronous && return _sync_label_propagation(edge_list, num_vertices, algo.max_iter)
+    algo.synchronous && return _sync_label_propagation_weighted(edge_list, num_vertices, algo.max_iter)
     return nothing
 end
