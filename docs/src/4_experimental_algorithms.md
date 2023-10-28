@@ -1,5 +1,5 @@
 
-# The Experimental Submodule
+# Experimental Algorithms
 `GraphCommunities.jl` also includes a submodule for experimental graph algorithms designed by the author.
 
 ## The `enhanced_graph_kmeans` Algorithm
